@@ -1,2 +1,5 @@
 Dynamic is a play project to mimic linqpad, only for dynamic languages.
 The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support to create a kind of REPL/console application
+
+Found some inspiration here>
+http://otac0n.com/blog/CommentView,guid,e07b25fa-c17a-4090-93cd-25fefa62b160.aspx
