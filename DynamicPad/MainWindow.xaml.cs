@@ -20,6 +20,7 @@ namespace DynamicPad
             grid.KeyDown += WindowKeyDown;
             textEditor.ShowLineNumbers = true;
             InitializeIronJs();
+            textEditor.Focus();
         }
 
         private void InitializeIronJs()
@@ -27,7 +28,9 @@ namespace DynamicPad
             _ctx = new CSharp.Context();
             Action<string> alert = message => MessageBox.Show(message);
             _ctx.SetGlobal("alert", Utils.CreateFunction(_ctx.Environment, 1, alert));
-            textEditor.Focus();
+
+            Action<string> log = message => output.Text += message + "\n";
+            _ctx.SetGlobal("log", Utils.CreateFunction(_ctx.Environment, 1, log));
         }
 
 
@@ -35,20 +38,37 @@ namespace DynamicPad
         {
             if (e.Key == Key.F5)
             {
-                var script = textEditor.Text;
-                try
-                {
-                    var result = _ctx.Execute(script);
-                    output.Text = result.ToString();
-                }
-                catch (Exception exception)
-                {
+                RunScript();
 
-                    output.Text = exception.ToString();
-                }
-                
                 e.Handled = true;
             }
+        }
+
+        private void ClearOutput()
+        {
+            output.Text = string.Empty;
+        }
+
+        private void RunScript()
+        {
+            var script = textEditor.Text;
+            try
+            {
+                var result = _ctx.Execute(script);
+                output.Text += result.ToString();
+            }
+            catch (Exception exception)
+            {
+                output.Text += "----------------------------------------------";
+                output.Text += "Exception";
+                output.Text += "----------------------------------------------";
+                output.Text += exception.ToString();
+            }
+        }
+
+        private void ClearOutput__(object sender, RoutedEventArgs e)
+        {
+            ClearOutput();
         }
     }
 }
