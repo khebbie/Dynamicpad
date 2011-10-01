@@ -1,0 +1,17 @@
+﻿<Window x:Class="DynamicPad.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow" Height="350" Width="525">
+    <Grid Name="grid"  VerticalAlignment="Top" HorizontalAlignment="Left" ShowGridLines="True"  Width="505" Height="317">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+
+        </Grid.RowDefinitions>
+        <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor"
+                           FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
+        <TextBox Name ="output" Grid.Row="1" Height="146" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="493" />
+    </Grid>
+</Window>
