@@ -27,6 +27,7 @@ namespace DynamicPad
             _ctx = new CSharp.Context();
             Action<string> alert = message => MessageBox.Show(message);
             _ctx.SetGlobal("alert", Utils.CreateFunction(_ctx.Environment, 1, alert));
+            textEditor.Focus();
         }
 
 
