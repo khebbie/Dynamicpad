@@ -59,10 +59,9 @@ namespace DynamicPad
             }
             catch (Exception exception)
             {
-                output.Text += "----------------------------------------------";
-                output.Text += "Exception";
-                output.Text += "----------------------------------------------";
+                output.Text += "\n--- Exception -------------------------------------------\n";
                 output.Text += exception.ToString();
+                output.Text += "\n--- Exception end----------------------------------------\n";
             }
         }
 
