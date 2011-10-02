@@ -18,6 +18,8 @@
                 <Button Name="ClearToolbarButton" Click="ClearOutput__">
                     <Image Source="toolbargraphics\clear.png" />
                 </Button>
+                <ComboBox Name="LanguageSelector">
+                </ComboBox>
             </ToolBar>
         </ToolBarTray>
         <avalonEdit:TextEditor Grid.Row="1" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor"

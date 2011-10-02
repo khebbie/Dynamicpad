@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using IronJS.Hosting;
 using IronJS.Native;
-using Exception = System.Exception;
+using IronRuby;
+using Microsoft.Scripting.Hosting;
 
 namespace DynamicPad
 {
@@ -19,6 +20,9 @@ namespace DynamicPad
             InitializeComponent();
             grid.KeyDown += WindowKeyDown;
             textEditor.ShowLineNumbers = true;
+            LanguageSelector.Items.Add("IronJS");
+            LanguageSelector.Items.Add("IronRuby");
+            LanguageSelector.SelectedIndex = 0;
             InitializeIronJs();
             textEditor.Focus();
         }
@@ -51,11 +55,37 @@ namespace DynamicPad
 
         private void RunScript()
         {
-            var script = textEditor.Text;
+            if (LanguageSelector.SelectedIndex == 0)
+                RunJS();
+            else
+                RunRubyScript();
+        }
+
+        private void RunJS()
+        {
+            string script = textEditor.Text;
             try
             {
-                var result = _ctx.Execute(script);
+                object result = _ctx.Execute(script);
                 output.Text += result.ToString();
+            }
+            catch (Exception exception)
+            {
+                output.Text += "\n--- Exception -------------------------------------------\n";
+                output.Text += exception.ToString();
+                output.Text += "\n--- Exception end----------------------------------------\n";
+            }
+        }
+
+        private void RunRubyScript()
+        {
+            try
+            {
+                //http://stackoverflow.com/questions/5341111/how-do-you-add-a-string-to-a-c-iliststring-from-ironruby
+                ScriptRuntime runtime = Ruby.CreateRuntime();
+                ScriptEngine engine = runtime.GetEngine("IronRuby");
+                var execute = engine.Execute(textEditor.Text);
+                output.Text = execute.ToString();
             }
             catch (Exception exception)
             {
