@@ -46,7 +46,6 @@ namespace DynamicPad
         {
             try
             {
-                //http://stackoverflow.com/questions/5341111/how-do-you-add-a-string-to-a-c-iliststring-from-ironruby
                 ScriptRuntime runtime = Ruby.CreateRuntime();
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
@@ -55,7 +54,8 @@ namespace DynamicPad
 
                 const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
                 var tbl = new DynamicModel(connectionString);
-                //var result = tbl.Query("select top 1 * from Person");
+                //tbl.Query("select top 1 * from Person")
+                //tbl.methods.sort.join("\n").to_s+"\n\n"
                 scriptScope.SetVariable("tbl", tbl);
 
                 var execute = engine.Execute(textEditor.Text, scriptScope);
