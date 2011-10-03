@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using IronJS.Hosting;
-using IronJS.Native;
 using IronRuby;
+using Massive;
 using Microsoft.Scripting.Hosting;
 
 namespace DynamicPad
@@ -13,30 +12,15 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CSharp.Context _ctx;
-
         public MainWindow()
         {
             InitializeComponent();
             grid.KeyDown += WindowKeyDown;
             textEditor.ShowLineNumbers = true;
-            LanguageSelector.Items.Add("IronJS");
             LanguageSelector.Items.Add("IronRuby");
             LanguageSelector.SelectedIndex = 0;
-            InitializeIronJs();
             textEditor.Focus();
         }
-
-        private void InitializeIronJs()
-        {
-            _ctx = new CSharp.Context();
-            Action<string> alert = message => MessageBox.Show(message);
-            _ctx.SetGlobal("alert", Utils.CreateFunction(_ctx.Environment, 1, alert));
-
-            Action<string> log = message => output.Text += message + "\n";
-            _ctx.SetGlobal("log", Utils.CreateFunction(_ctx.Environment, 1, log));
-        }
-
 
         private void WindowKeyDown(object sender, KeyEventArgs e)
         {
@@ -55,26 +39,7 @@ namespace DynamicPad
 
         private void RunScript()
         {
-            if (LanguageSelector.SelectedIndex == 0)
-                RunJS();
-            else
                 RunRubyScript();
-        }
-
-        private void RunJS()
-        {
-            string script = textEditor.Text;
-            try
-            {
-                object result = _ctx.Execute(script);
-                output.Text += result.ToString();
-            }
-            catch (Exception exception)
-            {
-                output.Text += "\n--- Exception -------------------------------------------\n";
-                output.Text += exception.ToString();
-                output.Text += "\n--- Exception end----------------------------------------\n";
-            }
         }
 
         private void RunRubyScript()
@@ -84,7 +49,16 @@ namespace DynamicPad
                 //http://stackoverflow.com/questions/5341111/how-do-you-add-a-string-to-a-c-iliststring-from-ironruby
                 ScriptRuntime runtime = Ruby.CreateRuntime();
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
-                var execute = engine.Execute(textEditor.Text);
+
+                var scriptScope = engine.CreateScope();
+
+
+                const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
+                var tbl = new DynamicModel(connectionString);
+                //var result = tbl.Query("select top 1 * from Person");
+                scriptScope.SetVariable("tbl", tbl);
+
+                var execute = engine.Execute(textEditor.Text, scriptScope);
                 output.Text = execute.ToString();
             }
             catch (Exception exception)
