@@ -5,11 +5,11 @@ using System.Windows.Input;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
-using Microsoft.Scripting.Utils;
 using Microsoft.Win32;
 
 namespace DynamicPad
 {
+    //Getting the icons from http://www.iconfinder.com
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -116,8 +116,9 @@ namespace DynamicPad
                 TextWriter tw = new StreamWriter(filename);
 
                 tw.Write(textEditor.Text);
-
                 tw.Close();
+
+                SetTitle(filename);
             }
         }
 
@@ -141,9 +142,14 @@ namespace DynamicPad
                 var streamReader = new StreamReader(filename);
                 textEditor.Text = streamReader.ReadToEnd();
                 streamReader.Close();
-                var fileInfo = new FileInfo(filename);
-                Title = "Doing magic with" + fileInfo.Name;
+                SetTitle(filename);
             }
+        }
+
+        private void SetTitle(string filename)
+        {
+            var fileInfo = new FileInfo(filename);
+            Title = "Doing magic with" + fileInfo.Name;
         }
 
         public static string GetDynamicPadDirectory()
@@ -157,6 +163,12 @@ namespace DynamicPad
         public static string GetMyDocumentsDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        }
+
+        private void NewToolbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            textEditor.Text = string.Empty;
+            Title = "New Document";
         }
     }
 }
