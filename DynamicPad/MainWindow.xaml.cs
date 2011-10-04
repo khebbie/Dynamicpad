@@ -6,6 +6,7 @@ using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
 using Microsoft.Scripting.Utils;
+using Microsoft.Win32;
 
 namespace DynamicPad
 {
@@ -36,7 +37,7 @@ namespace DynamicPad
 
         private void ClearOutput()
         {
-            output.Text = string.Empty;
+            output.Text = String.Empty;
         }
 
         private void RunScript()
@@ -97,11 +98,12 @@ namespace DynamicPad
 
         private void SaveToolbarButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new Microsoft.Win32.SaveFileDialog
+            var dlg = new SaveFileDialog
                           {
                               FileName = "Document", 
                               DefaultExt = ".dpad", 
-                              Filter = "dynamicpad documents (.dpad)|*.dpad"
+                              Filter = "dynamicpad documents (.dpad)|*.dpad",
+                              InitialDirectory = GetDynamicPadDirectory()
                           };
 
             bool? result = dlg.ShowDialog();
@@ -122,11 +124,12 @@ namespace DynamicPad
         private void OpenToolbarButton_Click(object sender, RoutedEventArgs e)
         {
             // Configure open file dialog box
-            var dlg = new Microsoft.Win32.OpenFileDialog
+            var dlg = new OpenFileDialog
                           {
                               FileName = "Document", 
                               DefaultExt = ".dpad", 
-                              Filter = "dynamicpad documents (.dpad)|*.dpad"
+                              Filter = "dynamicpad documents (.dpad)|*.dpad",
+                              InitialDirectory = GetDynamicPadDirectory()
                           };
 
             bool? result = dlg.ShowDialog();
@@ -139,6 +142,19 @@ namespace DynamicPad
                 textEditor.Text = streamReader.ReadToEnd();
                 streamReader.Close();
             }
+        }
+
+        public static string GetDynamicPadDirectory()
+        {
+            string dir =  Path.Combine(GetMyDocumentsDir(), "DynamicPad Queries");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
+        }
+
+        public static string GetMyDocumentsDir()
+        {
+            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
     }
 }
