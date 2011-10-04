@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using IronRuby;
@@ -48,14 +49,12 @@ namespace DynamicPad
             try
             {
                 ScriptRuntime runtime = Ruby.CreateRuntime();
-               // runtime.CreateOperations()
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
                 var scriptScope = engine.CreateScope();
 
-                const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
-                var tbl = new DynamicModel(connectionString, "Person");
-                //var mutableString = IronRuby.Builtins.MutableString.Create("");
+                AddTbl(scriptScope);
+
 
                 //tbl.Query("select top 1 * from Person")
                 //tbl.methods.sort.join("\n").to_s+"\n\n"
@@ -66,12 +65,12 @@ namespace DynamicPad
                 //    outp = outp + bovs.firstname
                 //    outp = outp + bovs.lastname
                 //    outp = outp + bovs.birthdate.ToString()
+                //    outp = outp + "\n"
                 //end
 
                 //outp
 
-
-                scriptScope.SetVariable("tbl", tbl);
+                scriptScope.SetVariable("log", new Log());
                 var execute = engine.Execute(textEditor.Text, scriptScope);
                 output.Text = execute.ToString();
                
@@ -84,9 +83,62 @@ namespace DynamicPad
             }
         }
 
+        private static void AddTbl(ScriptScope scriptScope)
+        {
+            const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
+            var tbl = new DynamicModel(connectionString, "Person");
+            scriptScope.SetVariable("tbl", tbl);
+        }
+
         private void ClearOutput__(object sender, RoutedEventArgs e)
         {
             ClearOutput();
+        }
+
+        private void SaveToolbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.SaveFileDialog
+                          {
+                              FileName = "Document", 
+                              DefaultExt = ".dpad", 
+                              Filter = "dynamicpad documents (.dpad)|*.dpad"
+                          };
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+
+                TextWriter tw = new StreamWriter(filename);
+
+                tw.Write(textEditor.Text);
+
+                tw.Close();
+            }
+        }
+
+        private void OpenToolbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Configure open file dialog box
+            var dlg = new Microsoft.Win32.OpenFileDialog
+                          {
+                              FileName = "Document", 
+                              DefaultExt = ".dpad", 
+                              Filter = "dynamicpad documents (.dpad)|*.dpad"
+                          };
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                // Open document
+                string filename = dlg.FileName;
+                var streamReader = new StreamReader(filename);
+                textEditor.Text = streamReader.ReadToEnd();
+                streamReader.Close();
+            }
         }
     }
 }

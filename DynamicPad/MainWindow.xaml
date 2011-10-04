@@ -6,6 +6,12 @@
                 <Button Name="ClearToolbarButton" Click="ClearOutput__">
                     <Image Source="toolbargraphics\clear.png" />
                 </Button>
+                <Button Name="SaveToolbarButton" Click="SaveToolbarButton_Click">
+                    <Image Source="toolbargraphics\save.png" />
+                </Button>
+                <Button Name="OpenToolbarButton" Click="OpenToolbarButton_Click">
+                    <Image Source="toolbargraphics\open.png" />
+                </Button>
                 <ComboBox Name="LanguageSelector">
                 </ComboBox>
             </ToolBar>
