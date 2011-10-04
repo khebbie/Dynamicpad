@@ -141,6 +141,8 @@ namespace DynamicPad
                 var streamReader = new StreamReader(filename);
                 textEditor.Text = streamReader.ReadToEnd();
                 streamReader.Close();
+                var fileInfo = new FileInfo(filename);
+                Title = "Doing magic with" + fileInfo.Name;
             }
         }
 
