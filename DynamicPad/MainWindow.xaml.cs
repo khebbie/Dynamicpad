@@ -4,6 +4,7 @@ using System.Windows.Input;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
+using Microsoft.Scripting.Utils;
 
 namespace DynamicPad
 {
@@ -47,19 +48,33 @@ namespace DynamicPad
             try
             {
                 ScriptRuntime runtime = Ruby.CreateRuntime();
+               // runtime.CreateOperations()
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
                 var scriptScope = engine.CreateScope();
 
-
                 const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
-                var tbl = new DynamicModel(connectionString);
+                var tbl = new DynamicModel(connectionString, "Person");
+                //var mutableString = IronRuby.Builtins.MutableString.Create("");
+
                 //tbl.Query("select top 1 * from Person")
                 //tbl.methods.sort.join("\n").to_s+"\n\n"
-                scriptScope.SetVariable("tbl", tbl);
 
+                // result = tbl.All()
+                // outp = ""
+                //result.each do |bovs| 
+                //    outp = outp + bovs.firstname
+                //    outp = outp + bovs.lastname
+                //    outp = outp + bovs.birthdate.ToString()
+                //end
+
+                //outp
+
+
+                scriptScope.SetVariable("tbl", tbl);
                 var execute = engine.Execute(textEditor.Text, scriptScope);
                 output.Text = execute.ToString();
+               
             }
             catch (Exception exception)
             {

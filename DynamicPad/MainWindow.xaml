@@ -10,7 +10,7 @@
                 </ComboBox>
             </ToolBar>
         </ToolBarTray>
-        <avalonEdit:TextEditor Height="75" DockPanel.Dock="Top" HorizontalAlignment="Stretch"  xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor"
+        <avalonEdit:TextEditor Height="375" DockPanel.Dock="Top" HorizontalAlignment="Stretch"  xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor"
                            FontFamily="Consolas" SyntaxHighlighting="Ruby" FontSize="10pt"/>
         <Label Content="Output:" DockPanel.Dock="Top" HorizontalAlignment="Stretch"  Height="28"  Margin="12,0,0,0" Name="label1" VerticalAlignment="Top" />
         <TextBox Name ="output" DockPanel.Dock="Top" HorizontalAlignment="Stretch"/>
