@@ -3,22 +3,22 @@
     <DockPanel Name="grid"  LastChildFill="True">
         <ToolBarTray Background="White"  DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
             <ToolBar  Grid.Row="0" Height="26" HorizontalAlignment="Left" Margin="12,12,0,0" Name="toolBar1" VerticalAlignment="Top" Width="200" >
-                <Button Name="ClearToolbarButton" Click="ClearOutput__">
+                <Button Name="ClearToolbarButton" Click="ClearOutput__" ToolTip="Clear output pane">
                     <Image Source="toolbargraphics\clear.png" />
                 </Button>
-                <Button Name="SaveToolbarButton" Click="SaveToolbarButton_Click">
+                <Button Name="SaveToolbarButton" Click="SaveToolbarButton_Click" ToolTip="Save file">
                     <Image Source="toolbargraphics\save.png" />
                 </Button>
-                <Button Name="OpenToolbarButton" Click="OpenToolbarButton_Click">
+                <Button Name="OpenToolbarButton" Click="OpenToolbarButton_Click" ToolTip="Open file">
                     <Image Source="toolbargraphics\open.png" />
                 </Button>
-                <Button Name="NewToolbarButton" Click="NewToolbarButton_Click">
+                <Button Name="NewToolbarButton" Click="NewToolbarButton_Click" ToolTip="new file">
                     <Image Source="toolbargraphics\new.png" />
                 </Button>
-                <Button Name="PlayToolbarButton" Click="PlayToolbarButton_Click">
+                <Button Name="PlayToolbarButton" Click="PlayToolbarButton_Click" ToolTip="Run script (F5)">
                     <Image Source="toolbargraphics\play.png" />
                 </Button>
-                <ComboBox Name="LanguageSelector">
+                <ComboBox Name="LanguageSelector" ToolTip="Select language">
                 </ComboBox>
             </ToolBar>
         </ToolBarTray>
