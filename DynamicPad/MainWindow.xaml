@@ -15,6 +15,9 @@
                 <Button Name="NewToolbarButton" Click="NewToolbarButton_Click">
                     <Image Source="toolbargraphics\new.png" />
                 </Button>
+                <Button Name="PlayToolbarButton" Click="PlayToolbarButton_Click">
+                    <Image Source="toolbargraphics\play.png" />
+                </Button>
                 <ComboBox Name="LanguageSelector">
                 </ComboBox>
             </ToolBar>

@@ -98,13 +98,8 @@ namespace DynamicPad
 
         private void SaveToolbarButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
-                          {
-                              FileName = "Document", 
-                              DefaultExt = ".dpad", 
-                              Filter = "dynamicpad documents (.dpad)|*.dpad",
-                              InitialDirectory = GetDynamicPadDirectory()
-                          };
+            var dlg = new SaveFileDialog();
+            AddFileDialogSettings(dlg);
 
             bool? result = dlg.ShowDialog();
 
@@ -125,13 +120,8 @@ namespace DynamicPad
         private void OpenToolbarButton_Click(object sender, RoutedEventArgs e)
         {
             // Configure open file dialog box
-            var dlg = new OpenFileDialog
-                          {
-                              FileName = "Document", 
-                              DefaultExt = ".dpad", 
-                              Filter = "dynamicpad documents (.dpad)|*.dpad",
-                              InitialDirectory = GetDynamicPadDirectory()
-                          };
+            var dlg = new OpenFileDialog();
+            AddFileDialogSettings(dlg);
 
             bool? result = dlg.ShowDialog();
 
@@ -144,6 +134,14 @@ namespace DynamicPad
                 streamReader.Close();
                 SetTitle(filename);
             }
+        }
+
+        private static void AddFileDialogSettings(FileDialog dlg)
+        {
+            dlg.FileName = "Document";
+            dlg.DefaultExt = ".dpad";
+            dlg.Filter = "dynamicpad documents (.dpad)|*.dpad";
+            dlg.InitialDirectory = GetDynamicPadDirectory();
         }
 
         private void SetTitle(string filename)
@@ -169,6 +167,11 @@ namespace DynamicPad
         {
             textEditor.Text = string.Empty;
             Title = "New Document";
+        }
+
+        private void PlayToolbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            RunScript();
         }
     }
 }
