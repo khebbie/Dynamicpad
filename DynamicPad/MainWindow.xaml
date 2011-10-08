@@ -29,5 +29,45 @@
         <ScrollViewer>
             <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="output" />
         </ScrollViewer>
+        <Canvas Name="ProgressIndicator">
+            <Canvas Name="spinningProgress" Margin="0,0,0,0" Height="130" Width="130"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Canvas Name="innerCanvas" Height="110" Width="110"  VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.Left="10" Canvas.Top="10">
+                    <Ellipse Margin="45,-5,0,0" Name="ellipseLarge" Stroke="Blue" Height="20" Width="20" VerticalAlignment="Top" Fill="Blue" HorizontalAlignment="Left" />
+                    <Ellipse Margin="85.3553,14.6447,0,0" Name="ellipse2" Stroke="Blue" HorizontalAlignment="Left" Width="10" Height="10" VerticalAlignment="Top" Fill="Blue" />
+                    <Ellipse Margin="100,50,0,0" Name="ellipse3" Stroke="Blue" Fill="Blue" HorizontalAlignment="Left" Height="10" Width="10" VerticalAlignment="Top" />
+                    <Ellipse Margin="85.3553,85.3553,0,0" Name="ellipse4" Stroke="Blue" HorizontalAlignment="Left" Width="10" Height="10" VerticalAlignment="Top" Fill="Blue" />
+                    <Ellipse Margin="50,100,0,0" Name="ellipse5" Stroke="Blue" Fill="Blue" HorizontalAlignment="Left" Width="10" Height="10" VerticalAlignment="Top" />
+                    <Ellipse Margin="14.6447,85.3553,0,0" Name="ellipse6" Stroke="Blue" HorizontalAlignment="Left" Width="10" Height="10" VerticalAlignment="Top" Fill="Blue" />
+                    <Ellipse Margin="0,50,0,0" Name="ellipse7" Stroke="Blue" HorizontalAlignment="Left" Width="10" Fill="Blue" Height="10" VerticalAlignment="Top" />
+                    <Ellipse Margin="12.1447,12.1447,0,0" Name="ellipseMedium" Width="15" Height="15" Stroke="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Blue" />
+                </Canvas>
+                <Canvas.RenderTransform>
+                    <RotateTransform x:Name="spin" Angle="0" CenterX="65" CenterY="65"/>
+                </Canvas.RenderTransform>
+                <Canvas.Triggers>
+                    <EventTrigger RoutedEvent="Canvas.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="spinningProgress"  
+                                Storyboard.TargetProperty="(Canvas.RenderTransform).(RotateTransform.Angle)" 
+                                RepeatBehavior="Forever" Duration="0:0:1">
+                                    <DiscreteDoubleKeyFrame Value="45" KeyTime="0:0:0.125" />
+                                    <DiscreteDoubleKeyFrame Value="90" KeyTime="0:0:0.25" />
+                                    <DiscreteDoubleKeyFrame Value="135" KeyTime="0:0:0.375" />
+                                    <DiscreteDoubleKeyFrame Value="180" KeyTime="0:0:0.5" />
+                                    <DiscreteDoubleKeyFrame Value="225" KeyTime="0:0:0.675" />
+                                    <DiscreteDoubleKeyFrame Value="270" KeyTime="0:0:0.75" />
+                                    <DiscreteDoubleKeyFrame Value="315" KeyTime="0:0:0.875" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Canvas.Triggers>
+            </Canvas>
+            <Canvas.RenderTransform>
+                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+            </Canvas.RenderTransform>
+        </Canvas>
     </DockPanel>
 </Window>

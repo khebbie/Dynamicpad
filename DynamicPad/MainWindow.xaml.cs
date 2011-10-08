@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Threading;
 using DynamicPad.Properties;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
@@ -26,13 +27,13 @@ namespace DynamicPad
         private const string OverrideRubyObject =
             @"
 class Object
-	def puts(str)
-		log.Print(str)
-	end
+    def puts(str)
+        log.Print(str)
+    end
 
     def p(str)
-		log.Print(str)
-	end
+        log.Print(str)
+    end
 
     def clear()
         log.Clear
@@ -47,11 +48,12 @@ class Object
 end";
 
         private CompletionWindow _completionWindow;
-        private ScriptEngine _scriptEngine;
+        private BackgroundWorker _backgroundWorker;
 
         public MainWindow()
         {
             InitializeComponent();
+            ProgressIndicator.Visibility = Visibility.Hidden;
             grid.KeyDown += WindowKeyDown;
             textEditor.ShowLineNumbers = true;
             PopulateConnectionStringsCombo();
@@ -60,6 +62,24 @@ end";
             textEditor.Focus();
             textEditor.TextArea.TextEntering += TextEditorTextAreaTextEntering;
             textEditor.TextArea.TextEntered += TextEditorTextAreaTextEntered;
+            InitializeBackgroundWorker();
+        }
+
+        private void InitializeBackgroundWorker()
+        {
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.DoWork += delegate(object s, DoWorkEventArgs args)
+            {
+                var scriptArguments = args.Argument as ScriptArguments;
+                RunRubyScript(scriptArguments);
+            };
+            _backgroundWorker.RunWorkerCompleted += delegate(object s, RunWorkerCompletedEventArgs args)
+            {
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    ProgressIndicator.Visibility = Visibility.Hidden;
+                }));
+            };
         }
 
         private void TextEditorTextAreaTextEntered(object sender, TextCompositionEventArgs e)
@@ -120,44 +140,62 @@ end";
 
         private void ClearOutput()
         {
-            output.Text = String.Empty;
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                output.Text = String.Empty;
+            }));
+            
         }
 
         private void RunScript()
         {
-            RunRubyScript();
+            ProgressIndicator.Visibility = Visibility.Visible;
+            var connectionStringName = ConnectionStringSelector.SelectedItem.ToString();
+            var connectionString = Settings.Default.Properties[connectionStringName].DefaultValue.ToString();
+            var scriptArguments = new ScriptArguments
+                                      {
+                                          ConnectionString = connectionString,
+                                          Script = textEditor.Text,
+                                          Logger = new Log(s =>SetOutput(s), ClearOutput)
+                                      };
+            _backgroundWorker.RunWorkerAsync(scriptArguments);
         }
 
-        private void RunRubyScript()
+        void SetOutput(string s)
+        {Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                output.Text += s;
+            }));
+            
+        }
+
+        private static void RunRubyScript(ScriptArguments scriptArguments)
         {
             try
             {
                 ScriptRuntime runtime = Ruby.CreateRuntime();
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
-                _scriptEngine = engine;
-                ScriptScope scriptScope = _scriptEngine.CreateScope();
+                ScriptScope scriptScope = engine.CreateScope();
 
-                AddTbl(scriptScope);
+                AddTbl(scriptScope, scriptArguments.ConnectionString);
 
-                scriptScope.SetVariable("log", new Log(s => output.Text += s, () => output.Text = string.Empty));
+                scriptScope.SetVariable("log", scriptArguments.Logger);
 
-                _scriptEngine.Execute(OverrideRubyObject, scriptScope);
-                _scriptEngine.Execute(textEditor.Text, scriptScope);
+                engine.Execute(OverrideRubyObject, scriptScope);
+                engine.Execute(scriptArguments.Script, scriptScope);
             }
             catch (Exception exception)
             {
-                output.Text += "\n--- Exception -------------------------------------------\n";
-                output.Text += exception.ToString();
-                output.Text += "\n--- Exception end----------------------------------------\n";
+                scriptArguments.Logger.Print(  "\n--- Exception -------------------------------------------\n");
+                scriptArguments.Logger.Print(exception.ToString());
+                scriptArguments.Logger.Print("\n--- Exception end----------------------------------------\n");
             }
         }
 
-        private void AddTbl(ScriptScope scriptScope)
+        private static void AddTbl(ScriptScope scriptScope, string connectionString)
         {
-            string selectedPropertyInfo = ConnectionStringSelector.SelectedItem.ToString();
-            string selectedConnectionString = Settings.Default.Properties[selectedPropertyInfo].DefaultValue.ToString();
-            var tbl = new DynamicModel(selectedConnectionString);
+            var tbl = new DynamicModel(connectionString);
             scriptScope.SetVariable("tbl", tbl);
         }
 
@@ -243,48 +281,5 @@ end";
         {
             RunScript();
         }
-    }
-
-    /// Implements AvalonEdit ICompletionData interface to provide the entries in the
-    /// completion drop down.
-    public class MyCompletionData : ICompletionData
-    {
-        public MyCompletionData(string text)
-        {
-            Text = text;
-        }
-
-        #region ICompletionData Members
-
-        public ImageSource Image
-        {
-            get { return null; }
-        }
-
-        public string Text { get; private set; }
-
-        // Use this property if you want to show a fancy UIElement in the list.
-        public object Content
-        {
-            get { return Text; }
-        }
-
-        public object Description
-        {
-            get { return "Description for " + Text; }
-        }
-
-        public double Priority
-        {
-            get { return 1; }
-        }
-
-        public void Complete(TextArea textArea, ISegment completionSegment,
-                             EventArgs insertionRequestEventArgs)
-        {
-            textArea.Document.Replace(completionSegment, Text);
-        }
-
-        #endregion
     }
 }
