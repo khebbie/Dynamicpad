@@ -23,7 +23,31 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string OverrideRubyObject =
+            @"
+class Object
+	def puts(str)
+		log.Print(str)
+	end
+
+    def p(str)
+		log.Print(str)
+	end
+
+    def clear()
+        log.Clear
+    end
+    def Dump(obj)
+        log.Dump(obj)
+    end
+
+    def DumpE(obj)
+        log.DumpEnumerable(obj)
+    end
+end";
+
         private CompletionWindow _completionWindow;
+        private ScriptEngine _scriptEngine;
 
         public MainWindow()
         {
@@ -111,14 +135,15 @@ namespace DynamicPad
                 ScriptRuntime runtime = Ruby.CreateRuntime();
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
-                ScriptScope scriptScope = engine.CreateScope();
+                _scriptEngine = engine;
+                ScriptScope scriptScope = _scriptEngine.CreateScope();
 
                 AddTbl(scriptScope);
 
                 scriptScope.SetVariable("log", new Log(s => output.Text += s, () => output.Text = string.Empty));
-                
-                engine.Execute(OverridePuts, scriptScope);
-                engine.Execute(textEditor.Text, scriptScope);
+
+                _scriptEngine.Execute(OverrideRubyObject, scriptScope);
+                _scriptEngine.Execute(textEditor.Text, scriptScope);
             }
             catch (Exception exception)
             {
@@ -127,21 +152,6 @@ namespace DynamicPad
                 output.Text += "\n--- Exception end----------------------------------------\n";
             }
         }
-
-        private const string OverridePuts = @"
-class Object
-	def puts(str)
-		log.Print(str)
-	end
-
-    def p(str)
-		log.Print(str)
-	end
-
-    def clear()
-        log.Clear
-    end
-end";
 
         private void AddTbl(ScriptScope scriptScope)
         {
