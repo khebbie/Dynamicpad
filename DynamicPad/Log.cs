@@ -4,14 +4,23 @@ namespace DynamicPad
 {
     public class Log
     {
-        public void Print(string message)
+        private readonly Action<string> _appender;
+        private readonly Action _clearText;
+
+        public Log(Action<string> appender, Action clearText)
         {
-            Console.WriteLine(message);
+            _appender = appender;
+            _clearText = clearText;
         }
 
-        public void Anno()
+        public void Print(string message)
         {
-            Console.WriteLine(@"autotext");
+            _appender(message);
+        }
+
+        public void Clear()
+        {
+            _clearText();
         }
     }
 }

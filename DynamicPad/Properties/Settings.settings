@@ -1,7 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DynamicPad.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConnectionStringListing" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=udv-db;Initial Catalog=Integration_NextRelease_Mercury_Listing;User ID=MercuryApp;Password=MercuryApp22;Transaction Binding=Explicit Unbind;;MultipleActiveResultSets=True</Value>
+    </Setting>
+    <Setting Name="ConnectionStringPerson" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

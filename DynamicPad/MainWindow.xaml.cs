@@ -1,7 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using DynamicPad.Properties;
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
@@ -15,14 +23,65 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
+        private CompletionWindow _completionWindow;
+
         public MainWindow()
         {
             InitializeComponent();
             grid.KeyDown += WindowKeyDown;
             textEditor.ShowLineNumbers = true;
+            PopulateConnectionStringsCombo();
             LanguageSelector.Items.Add("IronRuby");
             LanguageSelector.SelectedIndex = 0;
             textEditor.Focus();
+            textEditor.TextArea.TextEntering += TextEditorTextAreaTextEntering;
+            textEditor.TextArea.TextEntered += TextEditorTextAreaTextEntered;
+        }
+
+        private void TextEditorTextAreaTextEntered(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text == ".")
+            {
+                // Open code completion after the user has pressed dot:
+                _completionWindow = new CompletionWindow(textEditor.TextArea);
+                IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
+                data.Add(new MyCompletionData("Query"));
+                data.Add(new MyCompletionData("All()"));
+                data.Add(new MyCompletionData("ToString()"));
+                _completionWindow.Show();
+                _completionWindow.Closed += delegate { _completionWindow = null; };
+            }
+        }
+
+        private void TextEditorTextAreaTextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length > 0 && _completionWindow != null)
+            {
+                if (!char.IsLetterOrDigit(e.Text[0]))
+                {
+                    // Whenever a non-letter is typed while the completion window is open,
+                    // insert the currently selected element.
+                    _completionWindow.CompletionList.RequestInsertion(e);
+                }
+            }
+            // Do not set e.Handled=true.
+            // We still want to insert the character that was typed.
+        }
+
+        private void PopulateConnectionStringsCombo()
+        {
+            PropertyInfo[] props = Settings.Default.GetType().GetProperties();
+            foreach (PropertyInfo prop in props)
+            {
+                if (!prop.Name.Contains("ConnectionString"))
+                    continue;
+                SettingsProperty sett = Settings.Default.Properties[prop.Name];
+                if (sett != null)
+                {
+                    ConnectionStringSelector.Items.Add(sett.Name);
+                }
+            }
+            ConnectionStringSelector.SelectedIndex = 0;
         }
 
         private void WindowKeyDown(object sender, KeyEventArgs e)
@@ -42,7 +101,7 @@ namespace DynamicPad
 
         private void RunScript()
         {
-                RunRubyScript();
+            RunRubyScript();
         }
 
         private void RunRubyScript()
@@ -52,29 +111,14 @@ namespace DynamicPad
                 ScriptRuntime runtime = Ruby.CreateRuntime();
                 ScriptEngine engine = runtime.GetEngine("IronRuby");
 
-                var scriptScope = engine.CreateScope();
+                ScriptScope scriptScope = engine.CreateScope();
 
                 AddTbl(scriptScope);
 
-
-                //tbl.Query("select top 1 * from Person")
-                //tbl.methods.sort.join("\n").to_s+"\n\n"
-
-                // result = tbl.All()
-                // outp = ""
-                //result.each do |bovs| 
-                //    outp = outp + bovs.firstname
-                //    outp = outp + bovs.lastname
-                //    outp = outp + bovs.birthdate.ToString()
-                //    outp = outp + "\n"
-                //end
-
-                //outp
-
-                scriptScope.SetVariable("log", new Log());
-                var execute = engine.Execute(textEditor.Text, scriptScope);
-                output.Text = execute.ToString();
-               
+                scriptScope.SetVariable("log", new Log(s => output.Text += s, () => output.Text = string.Empty));
+                
+                engine.Execute(OverridePuts, scriptScope);
+                engine.Execute(textEditor.Text, scriptScope);
             }
             catch (Exception exception)
             {
@@ -84,10 +128,26 @@ namespace DynamicPad
             }
         }
 
-        private static void AddTbl(ScriptScope scriptScope)
+        private const string OverridePuts = @"
+class Object
+	def puts(str)
+		log.Print(str)
+	end
+
+    def p(str)
+		log.Print(str)
+	end
+
+    def clear()
+        log.Clear
+    end
+end";
+
+        private void AddTbl(ScriptScope scriptScope)
         {
-            const string connectionString = @"Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;";
-            var tbl = new DynamicModel(connectionString, "Person");
+            string selectedPropertyInfo = ConnectionStringSelector.SelectedItem.ToString();
+            string selectedConnectionString = Settings.Default.Properties[selectedPropertyInfo].DefaultValue.ToString();
+            var tbl = new DynamicModel(selectedConnectionString);
             scriptScope.SetVariable("tbl", tbl);
         }
 
@@ -152,7 +212,7 @@ namespace DynamicPad
 
         public static string GetDynamicPadDirectory()
         {
-            string dir =  Path.Combine(GetMyDocumentsDir(), "DynamicPad Queries");
+            string dir = Path.Combine(GetMyDocumentsDir(), "DynamicPad Queries");
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             return dir;
@@ -173,5 +233,48 @@ namespace DynamicPad
         {
             RunScript();
         }
+    }
+
+    /// Implements AvalonEdit ICompletionData interface to provide the entries in the
+    /// completion drop down.
+    public class MyCompletionData : ICompletionData
+    {
+        public MyCompletionData(string text)
+        {
+            Text = text;
+        }
+
+        #region ICompletionData Members
+
+        public ImageSource Image
+        {
+            get { return null; }
+        }
+
+        public string Text { get; private set; }
+
+        // Use this property if you want to show a fancy UIElement in the list.
+        public object Content
+        {
+            get { return Text; }
+        }
+
+        public object Description
+        {
+            get { return "Description for " + Text; }
+        }
+
+        public double Priority
+        {
+            get { return 1; }
+        }
+
+        public void Complete(TextArea textArea, ISegment completionSegment,
+                             EventArgs insertionRequestEventArgs)
+        {
+            textArea.Document.Replace(completionSegment, Text);
+        }
+
+        #endregion
     }
 }

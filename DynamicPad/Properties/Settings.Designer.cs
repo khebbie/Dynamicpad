@@ -22,5 +22,31 @@ namespace DynamicPad.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=udv-db;Initial Catalog=Integration_NextRelease_Mercury_Listing;User I" +
+            "D=MercuryApp;Password=MercuryApp22;Transaction Binding=Explicit Unbind;;Multiple" +
+            "ActiveResultSets=True")]
+        public string ConnectionStringListing {
+            get {
+                return ((string)(this["ConnectionStringListing"]));
+            }
+            set {
+                this["ConnectionStringListing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;")]
+        public string ConnectionStringPerson {
+            get {
+                return ((string)(this["ConnectionStringPerson"]));
+            }
+            set {
+                this["ConnectionStringPerson"] = value;
+            }
+        }
     }
 }
