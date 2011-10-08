@@ -84,6 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MyCompletionData.xaml.cs" />
+    <Compile Include="RubyScriptRunner.xaml.cs" />
     <Compile Include="ScriptArguments.xaml.cs" />
     <Compile Include="TextAreaCompletion.xaml.cs" />
     <Page Include="MainWindow.xaml">

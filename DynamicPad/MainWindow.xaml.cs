@@ -7,9 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DynamicPad.Properties;
-using IronRuby;
-using Massive;
-using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 
 namespace DynamicPad
@@ -20,28 +17,7 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string OverrideRubyObject =
-            @"
-class Object
-    def puts(str)
-        log.Print(str)
-    end
-
-    def p(str)
-        log.Print(str)
-    end
-
-    def clear()
-        log.Clear
-    end
-    def Dump(obj)
-        log.Dump(obj)
-    end
-
-    def DumpE(obj)
-        log.DumpEnumerable(obj)
-    end
-end";
+        
 
         
         private BackgroundWorker _backgroundWorker;
@@ -74,7 +50,7 @@ end";
             _backgroundWorker.DoWork += delegate(object s, DoWorkEventArgs args)
             {
                 var scriptArguments = args.Argument as ScriptArguments;
-                RunRubyScript(scriptArguments);
+                new RubyScriptRunner().RunRubyScript(scriptArguments);
             };
 
             _backgroundWorker.RunWorkerCompleted += delegate(object s, RunWorkerCompletedEventArgs args)
@@ -150,35 +126,7 @@ end";
             
         }
 
-        private static void RunRubyScript(ScriptArguments scriptArguments)
-        {
-            try
-            {
-                ScriptRuntime runtime = Ruby.CreateRuntime();
-                ScriptEngine engine = runtime.GetEngine("IronRuby");
-
-                ScriptScope scriptScope = engine.CreateScope();
-
-                AddTbl(scriptScope, scriptArguments.ConnectionString);
-
-                scriptScope.SetVariable("log", scriptArguments.Logger);
-
-                engine.Execute(OverrideRubyObject, scriptScope);
-                engine.Execute(scriptArguments.Script, scriptScope);
-            }
-            catch (Exception exception)
-            {
-                scriptArguments.Logger.Print(  "\n--- Exception -------------------------------------------\n");
-                scriptArguments.Logger.Print(exception.ToString());
-                scriptArguments.Logger.Print("\n--- Exception end----------------------------------------\n");
-            }
-        }
-
-        private static void AddTbl(ScriptScope scriptScope, string connectionString)
-        {
-            var tbl = new DynamicModel(connectionString);
-            scriptScope.SetVariable("tbl", tbl);
-        }
+        
 
         private void ClearOutput__(object sender, RoutedEventArgs e)
         {
