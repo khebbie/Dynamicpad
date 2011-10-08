@@ -17,9 +17,6 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-
-        
         private BackgroundWorker _backgroundWorker;
 
         public MainWindow()
@@ -63,8 +60,6 @@ namespace DynamicPad
             };
         }
 
-        
-
         private void PopulateConnectionStringsCombo()
         {
             PropertyInfo[] props = Settings.Default.GetType().GetProperties();
@@ -101,6 +96,7 @@ namespace DynamicPad
 
         private void RunScript()
         {
+            ClearOutput();
             ProgressIndicator.Visibility = Visibility.Visible;
             var connectionStringName = ConnectionStringSelector.SelectedItem.ToString();
             var connectionString = Settings.Default.Properties[connectionStringName].DefaultValue.ToString();
@@ -125,8 +121,6 @@ namespace DynamicPad
             }));
             
         }
-
-        
 
         private void ClearOutput__(object sender, RoutedEventArgs e)
         {
