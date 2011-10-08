@@ -26,7 +26,7 @@
         </ToolBarTray>
         <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" DockPanel.Dock="Top" Height="375" FontFamily="Consolas" FontSize="10pt" HorizontalAlignment="Stretch" Name="textEditor" SyntaxHighlighting="Ruby" />
         <Label DockPanel.Dock="Top" Height="28" Margin="12,0,0,0" Content="Output:" HorizontalAlignment="Stretch" Name="label1" VerticalAlignment="Top" />
-        <ScrollViewer>
+        <ScrollViewer DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="output" />
         </ScrollViewer>
         <Canvas Name="ProgressIndicator">
