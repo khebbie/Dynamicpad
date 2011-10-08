@@ -69,5 +69,9 @@
                 <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
             </Canvas.RenderTransform>
         </Canvas>
+        <StatusBar Margin="0,288,0,0" Name="statusBar" Height="23" VerticalAlignment="Bottom">
+            <TextBlock Name="statusText">Ready.</TextBlock>
+        </StatusBar>
     </DockPanel>
+    
 </Window>

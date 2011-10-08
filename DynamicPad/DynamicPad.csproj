@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="MyCompletionData.xaml.cs" />
     <Compile Include="ScriptArguments.xaml.cs" />
+    <Compile Include="TextAreaCompletion.xaml.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

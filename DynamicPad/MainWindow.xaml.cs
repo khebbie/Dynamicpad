@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DynamicPad.Properties;
-using ICSharpCode.AvalonEdit.CodeCompletion;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;
@@ -47,7 +43,7 @@ class Object
     end
 end";
 
-        private CompletionWindow _completionWindow;
+        
         private BackgroundWorker _backgroundWorker;
 
         public MainWindow()
@@ -60,9 +56,16 @@ end";
             LanguageSelector.Items.Add("IronRuby");
             LanguageSelector.SelectedIndex = 0;
             textEditor.Focus();
-            textEditor.TextArea.TextEntering += TextEditorTextAreaTextEntering;
-            textEditor.TextArea.TextEntered += TextEditorTextAreaTextEntered;
+
+            SetupCodeCompletion();
             InitializeBackgroundWorker();
+        }
+
+        private void SetupCodeCompletion()
+        {
+            var textAreaCompletion = new TextAreaCompletion();
+            textEditor.TextArea.TextEntering += textAreaCompletion.TextEditorTextAreaTextEntering;
+            textEditor.TextArea.TextEntered += textAreaCompletion.TextEditorTextAreaTextEntered;
         }
 
         private void InitializeBackgroundWorker()
@@ -73,44 +76,18 @@ end";
                 var scriptArguments = args.Argument as ScriptArguments;
                 RunRubyScript(scriptArguments);
             };
+
             _backgroundWorker.RunWorkerCompleted += delegate(object s, RunWorkerCompletedEventArgs args)
             {
                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                 {
                     ProgressIndicator.Visibility = Visibility.Hidden;
+                    statusText.Text = "Finished";
                 }));
             };
         }
 
-        private void TextEditorTextAreaTextEntered(object sender, TextCompositionEventArgs e)
-        {
-            if (e.Text == ".")
-            {
-                // Open code completion after the user has pressed dot:
-                _completionWindow = new CompletionWindow(textEditor.TextArea);
-                IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
-                data.Add(new MyCompletionData("Query"));
-                data.Add(new MyCompletionData("All()"));
-                data.Add(new MyCompletionData("ToString()"));
-                _completionWindow.Show();
-                _completionWindow.Closed += delegate { _completionWindow = null; };
-            }
-        }
-
-        private void TextEditorTextAreaTextEntering(object sender, TextCompositionEventArgs e)
-        {
-            if (e.Text.Length > 0 && _completionWindow != null)
-            {
-                if (!char.IsLetterOrDigit(e.Text[0]))
-                {
-                    // Whenever a non-letter is typed while the completion window is open,
-                    // insert the currently selected element.
-                    _completionWindow.CompletionList.RequestInsertion(e);
-                }
-            }
-            // Do not set e.Handled=true.
-            // We still want to insert the character that was typed.
-        }
+        
 
         private void PopulateConnectionStringsCombo()
         {
@@ -144,7 +121,6 @@ end";
             {
                 output.Text = String.Empty;
             }));
-            
         }
 
         private void RunScript()
@@ -156,15 +132,20 @@ end";
                                       {
                                           ConnectionString = connectionString,
                                           Script = textEditor.Text,
-                                          Logger = new Log(s =>SetOutput(s), ClearOutput)
+                                          Logger = new Log(SetOutput, ClearOutput)
                                       };
-            _backgroundWorker.RunWorkerAsync(scriptArguments);
+            if (_backgroundWorker.IsBusy)
+                statusText.Text = "Busy";
+            else
+                _backgroundWorker.RunWorkerAsync(scriptArguments);
         }
 
         void SetOutput(string s)
-        {Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 output.Text += s;
+                ProgressIndicator.Visibility = Visibility.Visible;
             }));
             
         }
