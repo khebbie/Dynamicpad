@@ -9,6 +9,8 @@ namespace DynamicPad
     {
         private const string OverrideRubyObject =
             @"
+require 'dynamicpad.exe'
+connString = ""{0}""
 class Object
     def puts(str)
         log.Print(str)
@@ -41,8 +43,8 @@ end";
                 AddTbl(scriptScope, scriptArguments.ConnectionString);
 
                 scriptScope.SetVariable("log", scriptArguments.Logger);
-
-                engine.Execute(OverrideRubyObject, scriptScope);
+                var initialScript = string.Format(OverrideRubyObject, scriptArguments.ConnectionString.Replace("\\", "\\\\"));
+                engine.Execute(initialScript, scriptScope);
                 engine.Execute(scriptArguments.Script, scriptScope);
             }
             catch (Exception exception)
