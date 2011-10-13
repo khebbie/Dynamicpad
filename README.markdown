@@ -1,6 +1,10 @@
 DynamicPad is a play project to mimic linqpad, only for dynamic languages.
 IronRuby is the language of DynamicPad for now, other languages might follow as needed
-I use Massive from Rub Connery to include data access.
+
+I use Massive from Rub Connery to include data access. And inject a DynamicModel as tbl into the script.
+
+For now you have to add the connectionstring to settings...
+
 
 Given the following table structure:
 
