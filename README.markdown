@@ -1,4 +1,6 @@
-DynamicPad is a play project to mimic linqpad, only for dynamic languages.
+DynamicPad is a project to mimic linqpad, only for dynamic languages.
+You can do normal REPL stuff and you can do database queries...
+
 IronRuby is the language of DynamicPad for now, other languages might follow as needed
 
 I use Massive from Rub Connery to include data access. And inject a DynamicModel as tbl into the script.
@@ -79,7 +81,7 @@ Result:
 
 	
 RoadMap:
-The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support to create a kind of REPL/console application
+The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support.
 
 Please note that this is a prototype - the architecture of this app is bad :-(
 
