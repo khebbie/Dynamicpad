@@ -24,9 +24,9 @@ You can do sql queries:
 	
 Result:
 
-	Klaus                                                                                               Hebsgaard                                                                                           23-09-2011 00:00:00
-	John                                                                                                Doe                                                                                                 01-09-2011 00:00:00
-	Jane                                                                                                Doe                                                                                                 01-09-2000 00:00:00
+	Klaus	Hebsgaard	23-09-2011 00:00:00
+	John	Doe			01-09-2011 00:00:00
+	Jane	Doe			01-09-2000 00:00:00
 
 You can also do templated queries, where you use objects to specify the query:
 	
