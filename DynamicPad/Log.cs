@@ -23,6 +23,7 @@ namespace DynamicPad
         public void Print(string message)
         {
             _appender(message);
+            _appender("\n");
         }
 
         public void Clear()
@@ -43,6 +44,7 @@ namespace DynamicPad
         {
             foreach (var value in values)
             {
+                
                 Dump(value);
                 Print("\n");
             }

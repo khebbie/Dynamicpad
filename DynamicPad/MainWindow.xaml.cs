@@ -44,6 +44,7 @@ namespace DynamicPad
         private void InitializeBackgroundWorker()
         {
             _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.WorkerSupportsCancellation = true;
             _backgroundWorker.DoWork += delegate(object s, DoWorkEventArgs args)
             {
                 var scriptArguments = args.Argument as ScriptArguments;
@@ -106,6 +107,7 @@ namespace DynamicPad
                                           Script = textEditor.Text,
                                           Logger = new Log(SetOutput, ClearOutput)
                                       };
+            
             if (_backgroundWorker.IsBusy)
                 statusText.Text = "Busy";
             else
@@ -171,14 +173,14 @@ namespace DynamicPad
         {
             dlg.FileName = "Document";
             dlg.DefaultExt = ".dpad";
-            dlg.Filter = "dynamicpad documents (.dpad)|*.dpad";
+            dlg.Filter = "dynamicpad scripts (.dpad)|*.dpad";
             dlg.InitialDirectory = GetDynamicPadDirectory();
         }
 
         private void SetTitle(string filename)
         {
             var fileInfo = new FileInfo(filename);
-            Title = "Doing magic with" + fileInfo.Name;
+            Title = "Doing magic with " + fileInfo.Name;
         }
 
         public static string GetDynamicPadDirectory()
@@ -203,6 +205,13 @@ namespace DynamicPad
         private void PlayToolbarButton_Click(object sender, RoutedEventArgs e)
         {
             RunScript();
+        }
+
+        private void StopToolbarButton_Click(object sender, RoutedEventArgs e)
+        {
+            _backgroundWorker.CancelAsync();
+            ProgressIndicator.Visibility = Visibility.Hidden;
+            statusText.Text = "Stopped script run";
         }
     }
 }

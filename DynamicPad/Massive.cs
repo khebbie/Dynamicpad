@@ -70,6 +70,11 @@ namespace Massive
         public virtual string PrimaryKeyField { get; set; }
         public virtual string TableName { get; set; }
 
+        public void SetTableName(string tableName)
+        {
+            TableName = tableName;
+        }
+
         public static DynamicModel Open(string connectionStringName)
         {
             dynamic dm = new DynamicModel(connectionStringName);
@@ -138,6 +143,28 @@ namespace Massive
                     ;
                 }
             }
+        }
+
+        public virtual IEnumerable<dynamic>  Query(string tableName, ExpandoObject obj)
+        {
+            TableName = tableName;
+            string sql = BuildSelectFromExpandoObject(obj);
+            return Query(sql);
+        }
+
+        private string BuildSelectFromExpandoObject(IEnumerable<KeyValuePair<string, object>> expandoObject)
+        {
+            var sql = "select * from " + TableName + " where 1=1";
+            foreach (var val in expandoObject)
+            {
+                if(val.Key == "_Table")
+                    continue;
+                if (val.Value == null || string.IsNullOrWhiteSpace(val.Value.ToString()))
+                    continue;
+                    sql += " and ";
+                sql += val.Key + "='" + val.Value + "'";
+            }
+            return sql;
         }
 
         public virtual IEnumerable<dynamic> Query(string sql, DbConnection connection, params object[] args)

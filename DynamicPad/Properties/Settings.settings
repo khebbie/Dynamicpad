@@ -8,5 +8,10 @@
     <Setting Name="ConnectionStringPerson" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;</Value>
     </Setting>
+    <Setting Name="ConnectionStringUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=udv-db;Initial Catalog=Integration_NextRelease_Mercury_User
+;User ID=MercuryApp;Password=MercuryApp22;Transaction Binding=Explicit Unbind;;MultipleActiveResultSets=True
+</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

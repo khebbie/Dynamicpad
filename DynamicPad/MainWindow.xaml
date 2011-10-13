@@ -8,6 +8,8 @@
                 <Button Click="SaveToolbarButton_Click" Name="SaveToolbarButton" ToolTip="Save file">
                     <Image Source="toolbargraphics\save.png" />
                 </Button>
+
+               
                 <Button Click="OpenToolbarButton_Click" Name="OpenToolbarButton" ToolTip="Open file">
                     <Image Source="toolbargraphics\open.png" />
                 </Button>
@@ -17,6 +19,9 @@
                 <Button Click="PlayToolbarButton_Click" Name="PlayToolbarButton" ToolTip="Run script (F5)">
                     <Image Source="toolbargraphics\play.png" />
                 </Button>
+                <Button  Name="StopToolbarButton" ToolTip="Stop script run" Click="StopToolbarButton_Click">
+                    <Image Source="toolbargraphics\stop.png" />
+                </Button>
                 <ComboBox Name="LanguageSelector" ToolTip="Select language">
                     
                 </ComboBox>
@@ -24,7 +29,7 @@
                 </ComboBox>
             </ToolBar>
         </ToolBarTray>
-        <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" DockPanel.Dock="Top" Height="375" FontFamily="Consolas" FontSize="10pt" HorizontalAlignment="Stretch" Name="textEditor" SyntaxHighlighting="Ruby" />
+        <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" DockPanel.Dock="Top" Height="375" FontFamily="Consolas" FontSize="10pt" HorizontalAlignment="Stretch" Name="textEditor" SyntaxHighlighting="Javascript" />
         <Label DockPanel.Dock="Top" Height="28" Margin="12,0,0,0" Content="Output:" HorizontalAlignment="Stretch" Name="label1" VerticalAlignment="Top" />
         <ScrollViewer DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="output" />
