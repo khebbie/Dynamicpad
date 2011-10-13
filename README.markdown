@@ -16,6 +16,7 @@ Given the following table structure:
 	John                                                                                                 2011-09-01 Doe
 	Jane                                                                                                 2000-09-01 Doe
 
+p and puts works out of the box, and prints to the output pane	
 You can do sql queries:
 
 	result = tbl.Query("select * from person".ToString())
@@ -34,6 +35,7 @@ Result:
 	John	Doe			01-09-2011 00:00:00
 	Jane	Doe			01-09-2000 00:00:00
 
+DumpE dumps enumerables
 You can also do templated queries, where you use objects to specify the query:
 	
 	x = tbl.Prototype
