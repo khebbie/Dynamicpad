@@ -4,39 +4,39 @@ I use Massive from Rub Connery to include data access.
 
 With that you can do sql queries:
 
-result = tbl.All()
-outp = ""
-result.each do |bovs| 
-	outp = outp + bovs.firstname
-	outp = outp + bovs.lastname
-	outp = outp + bovs.birthdate.ToString()
-	outp = outp + "\n"
-end
-p outp
+	result = tbl.All()
+	outp = ""
+	result.each do |bovs| 
+		outp = outp + bovs.firstname
+		outp = outp + bovs.lastname
+		outp = outp + bovs.birthdate.ToString()
+		outp = outp + "\n"
+	end
+	p outp
 
 You can also do templated queries, where you use objects to specify the query:
-x = tbl.Prototype
+	x = tbl.Prototype
 
-x.firstname = "Klaus"
+	x.firstname = "Klaus"
 
-DumpE tbl.Query("person".ToString(), x)
+	DumpE tbl.Query("person".ToString(), x)
 
 If you wan't to do your own stuff, you can inherit Massives DynamicModel and do your own stuff:
-class MyModel < Massive::DynamicModel
-	def GetStuff
-		 Query("select * from Person Where firstname ='Klaus'".ToString())
-	end	
-end
+	class MyModel < Massive::DynamicModel
+		def GetStuff
+			 Query("select * from Person Where firstname ='Klaus'".ToString())
+		end	
+	end
 
-m = MyModel.new(connString, "Person")
-#DumpE m.GetStuff
-#DumpE m.All
-p m.Count.ToString()
+	m = MyModel.new(connString, "Person")
+	#DumpE m.GetStuff
+	#DumpE m.All
+	p m.Count.ToString()
 
-s = m.Single("firstname = 'Søren'".ToString())
-Dump s
+	s = m.Single("firstname = 'Søren'".ToString())
+	Dump s
 
-RoadMap>
+RoadMap:
 The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support to create a kind of REPL/console application
 
 Please note that this is a prototype - the architecture of this app is bad :-(
