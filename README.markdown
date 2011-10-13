@@ -12,7 +12,7 @@ Given the following table structure:
 
 You can do sql queries:
 
-	result = tbl.All()
+	result = tbl.Query("select * from person".ToString())
 	outp = ""
 	result.each do |bovs| 
 		outp = outp + bovs.firstname
@@ -21,6 +21,12 @@ You can do sql queries:
 		outp = outp + "\n"
 	end
 	p outp
+	
+Result:
+
+	Klaus                                                                                               Hebsgaard                                                                                           23-09-2011 00:00:00
+	John                                                                                                Doe                                                                                                 01-09-2011 00:00:00
+	Jane                                                                                                Doe                                                                                                 01-09-2000 00:00:00
 
 You can also do templated queries, where you use objects to specify the query:
 	
@@ -29,8 +35,18 @@ You can also do templated queries, where you use objects to specify the query:
 	x.firstname = "Klaus"
 
 	DumpE tbl.Query("person".ToString(), x)
+	
+Result:
 
-If you wan't to do your own stuff, you can inherit Massives DynamicModel and do your own stuff:
+	Firstname: Klaus                                                                                               
+
+
+	Birthdate: 23-09-2011 00:00:00
+
+
+	Lastname: Hebsgaard       
+
+If you wan't to do your own stuff, you can inherit Massives DynamicModel and do your own stuff, the connectionString is injected into the script as "connString":
 	
 	class MyModel < Massive::DynamicModel
 		def GetStuff
@@ -46,6 +62,18 @@ If you wan't to do your own stuff, you can inherit Massives DynamicModel and do 
 	s = m.Single("firstname = 'John'".ToString())
 	Dump s
 
+Result:
+
+	4
+	Firstname: John                                                                                                
+
+
+	Birthdate: 01-09-2011 00:00:00
+
+
+	Lastname: Doe     
+
+	
 RoadMap:
 The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support to create a kind of REPL/console application
 
