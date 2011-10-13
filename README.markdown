@@ -2,7 +2,15 @@ DynamicPad is a play project to mimic linqpad, only for dynamic languages.
 IronRuby is the language of DynamicPad for now, other languages might follow as needed
 I use Massive from Rub Connery to include data access.
 
-With that you can do sql queries:
+Given the following table structure:
+
+	Firstname                                                                                            Birthdate  Lastname
+	---------------------------------------------------------------------------------------------------- ---------- -----------
+	Klaus                                                                                                2011-09-23 Hebsgaard 
+	John                                                                                                 2011-09-01 Doe
+	Jane                                                                                                 2000-09-01 Doe
+
+You can do sql queries:
 
 	result = tbl.All()
 	outp = ""
