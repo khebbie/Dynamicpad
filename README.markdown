@@ -15,6 +15,7 @@ With that you can do sql queries:
 	p outp
 
 You can also do templated queries, where you use objects to specify the query:
+	
 	x = tbl.Prototype
 
 	x.firstname = "Klaus"
@@ -22,6 +23,7 @@ You can also do templated queries, where you use objects to specify the query:
 	DumpE tbl.Query("person".ToString(), x)
 
 If you wan't to do your own stuff, you can inherit Massives DynamicModel and do your own stuff:
+	
 	class MyModel < Massive::DynamicModel
 		def GetStuff
 			 Query("select * from Person Where firstname ='Klaus'".ToString())
@@ -33,7 +35,7 @@ If you wan't to do your own stuff, you can inherit Massives DynamicModel and do 
 	#DumpE m.All
 	p m.Count.ToString()
 
-	s = m.Single("firstname = 'Søren'".ToString())
+	s = m.Single("firstname = 'John'".ToString())
 	Dump s
 
 RoadMap:
