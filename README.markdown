@@ -92,7 +92,8 @@ The plan is to add IronJs (maybe some coffeescript), powershell, IronPython and 
 
 0.2
 --------
-- Syntax highlightinh
+- Syntax highlighting
+- Query pane, listing all queries in the dynamicPad directory
 
 0.3
 --------
