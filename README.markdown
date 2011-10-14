@@ -6,7 +6,8 @@ IronRuby is the language of DynamicPad for now, other languages might follow as 
 I use Massive from Rub Connery to include data access. And inject a DynamicModel as tbl into the script.
 
 For now you have to add the connectionstring to settings...
-
+p and puts works out of the box, and prints to the output pane	
+DumpE dumps enumerables
 
 Given the following table structure:
 
@@ -16,7 +17,6 @@ Given the following table structure:
 	John                                                                                                 2011-09-01 Doe
 	Jane                                                                                                 2000-09-01 Doe
 
-p and puts works out of the box, and prints to the output pane	
 You can do sql queries:
 
 	result = tbl.Query("select * from person".ToString())
@@ -35,7 +35,6 @@ Result:
 	John	Doe			01-09-2011 00:00:00
 	Jane	Doe			01-09-2000 00:00:00
 
-DumpE dumps enumerables
 You can also do templated queries, where you use objects to specify the query:
 	
 	x = tbl.Prototype
@@ -83,7 +82,26 @@ Result:
 
 	
 RoadMap:
-The plan is to add IronJs (maybe some coffeescript), IronPython and IronRuby support.
+The plan is to add IronJs (maybe some coffeescript), powershell, IronPython and IronRuby support.
+
+0.1 
+--------
+- Basic editor functionality: CTRL+S => Save
+- ConnectionString manager
+
+0.2
+--------
+- Syntax highlightinh
+
+0.3
+--------
+- Real REPL commandline like in Powershell ISE
+
+0.4
+--------
+- Powershell
+
+...
 
 Please note that this is a prototype - the architecture of this app is bad :-(
 
