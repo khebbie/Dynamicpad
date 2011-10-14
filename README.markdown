@@ -93,11 +93,12 @@ The plan is to add IronJs (maybe some coffeescript), powershell, IronPython and 
 0.2
 --------
 - Syntax highlighting
-- Query pane, listing all queries in the dynamicPad directory
+- Query pane, listing all files in the dynamicPad directory
 
 0.3
 --------
 - Real REPL commandline like in Powershell ISE
+- Browser as output pane
 
 0.4
 --------
