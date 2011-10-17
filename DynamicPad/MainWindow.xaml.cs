@@ -34,12 +34,34 @@ namespace DynamicPad
             SetupCodeCompletion();
             textEditor.TextArea.TextEntered += new TextCompositionEventHandler(TextArea_TextEntered);
             InitializeBackgroundWorker();
+            this.Closing += new CancelEventHandler(MainWindow_Closing);
+        }
+
+        void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (_textChangedSinceLastSave)
+            {
+                var showSaveYesNoDialog = ShowSaveYesNoDialog();
+                if (showSaveYesNoDialog == MessageBoxResult.Yes)
+                {
+                    if (string.IsNullOrWhiteSpace(_currentFileName))
+                        SaveFileCheckIfAlreadyLoaded();
+                    else
+                        Save(_currentFileName);
+                }
+                else if (showSaveYesNoDialog == MessageBoxResult.Cancel)
+                {
+                    //cancel exit
+                    e.Cancel = true;
+                }
+            }
         }
 
         private bool _textChangedSinceLastSave = false;
         void TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
             _textChangedSinceLastSave = true;
+            SetTitle(_currentFileName + " *");
         }
 
         private void SetupCodeCompletion()
@@ -191,8 +213,7 @@ namespace DynamicPad
         {
             if (_textChangedSinceLastSave)
             {
-                var messageBoxResult = MessageBox.Show("Text not saved yet do you want to save", "Unsaved changes",
-                                                       MessageBoxButton.YesNoCancel);
+                var messageBoxResult = ShowSaveYesNoDialog();
                 if (messageBoxResult == MessageBoxResult.Yes)
                     SaveFileCheckIfAlreadyLoaded();
                 else if (messageBoxResult == MessageBoxResult.Cancel)
@@ -203,9 +224,14 @@ namespace DynamicPad
             OpenFileDialog();
         }
 
+        private static MessageBoxResult ShowSaveYesNoDialog()
+        {
+            return MessageBox.Show("Text not saved yet do you want to save", "Unsaved changes",
+                                   MessageBoxButton.YesNoCancel);
+        }
+
         private void OpenFileDialog()
         {
-// Configure open file dialog box
             var dlg = new OpenFileDialog();
             AddFileDialogSettings(dlg);
 
@@ -236,8 +262,7 @@ namespace DynamicPad
 
         private void SetTitle(string filename)
         {
-            var fileInfo = new FileInfo(filename);
-            Title = "Doing magic with " + fileInfo.Name;
+            Title = "Doing magic with " + filename;
         }
 
         public static string GetDynamicPadDirectory()
