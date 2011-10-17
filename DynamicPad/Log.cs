@@ -36,7 +36,6 @@ namespace DynamicPad
             foreach (var val in obj)
             {
                 Print(val.Key + ": " +  val.Value);
-                Print("\n");
             }
         }
 
@@ -44,9 +43,7 @@ namespace DynamicPad
         {
             foreach (var value in values)
             {
-                
                 Dump(value);
-                Print("\n");
             }
         }
         public void DumpModel(DynamicModel model)

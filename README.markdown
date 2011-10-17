@@ -2,8 +2,9 @@ DynamicPad is a project to mimic linqpad, only for dynamic languages.
 You can do normal REPL stuff and you can do database queries...
 
 IronRuby is the language of DynamicPad for now, other languages might follow as needed
+Only Sql Server is supported and other databases might follow as needed
 
-I use Massive from Rub Connery to include data access. And inject a DynamicModel as tbl into the script.
+I use Massive from Rob Connery to include data access. And inject a DynamicModel as tbl into the script.
 
 For now you have to add the connectionstring to settings...
 p and puts works out of the box, and prints to the output pane	
@@ -103,6 +104,10 @@ The plan is to add IronJs (maybe some coffeescript), powershell, IronPython and 
 0.4
 --------
 - Powershell
+
+0.X
+--------
+Other databases
 
 ...
 

@@ -30,6 +30,13 @@ class Object
     def DumpE(obj)
         log.DumpEnumerable(obj)
     end
+    def Query(sql)
+        tbl.Query(sql.ToString())
+    end
+
+    def PrototypeQuery(tableName, obj)
+        tbl.Query(tableName.ToString(), obj)
+    end
 end";
         public void RunRubyScript(ScriptArguments scriptArguments)
         {

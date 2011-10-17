@@ -23,7 +23,7 @@ namespace DynamicPad
         {
             InitializeComponent();
             ProgressIndicator.Visibility = Visibility.Hidden;
-            grid.KeyDown += WindowKeyDown;
+            grid.KeyUp += WindowKeyUp;
             textEditor.ShowLineNumbers = true;
             PopulateConnectionStringsCombo();
             LanguageSelector.Items.Add("IronRuby");
@@ -43,8 +43,7 @@ namespace DynamicPad
 
         private void InitializeBackgroundWorker()
         {
-            _backgroundWorker = new BackgroundWorker();
-            _backgroundWorker.WorkerSupportsCancellation = true;
+            _backgroundWorker = new BackgroundWorker {WorkerSupportsCancellation = true};
             _backgroundWorker.DoWork += delegate(object s, DoWorkEventArgs args)
             {
                 var scriptArguments = args.Argument as ScriptArguments;
@@ -77,13 +76,24 @@ namespace DynamicPad
             ConnectionStringSelector.SelectedIndex = 0;
         }
 
-        private void WindowKeyDown(object sender, KeyEventArgs e)
+        private void WindowKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F5)
             {
                 RunScript();
 
                 e.Handled = true;
+            }
+            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                if(String.IsNullOrWhiteSpace(_currentFileName))
+                    SaveDialog();
+                else
+                    Save(_currentFileName);
+            }
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                OpenFileDialog();
             }
         }
 
@@ -131,6 +141,11 @@ namespace DynamicPad
 
         private void SaveToolbarButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveDialog();
+        }
+
+        private void SaveDialog()
+        {
             var dlg = new SaveFileDialog();
             AddFileDialogSettings(dlg);
 
@@ -138,21 +153,30 @@ namespace DynamicPad
 
             if (result == true)
             {
-                // Save document
-                string filename = dlg.FileName;
-
-                TextWriter tw = new StreamWriter(filename);
-
-                tw.Write(textEditor.Text);
-                tw.Close();
-
-                SetTitle(filename);
+                Save(dlg.FileName);
             }
+            _currentFileName = dlg.FileName;
+        }
+
+        private void Save(string fileName)
+        {
+            TextWriter tw = new StreamWriter(fileName);
+
+            tw.Write(textEditor.Text);
+            tw.Close();
+
+            SetTitle(fileName);
+            return;
         }
 
         private void OpenToolbarButton_Click(object sender, RoutedEventArgs e)
         {
-            // Configure open file dialog box
+            OpenFileDialog();
+        }
+
+        private void OpenFileDialog()
+        {
+// Configure open file dialog box
             var dlg = new OpenFileDialog();
             AddFileDialogSettings(dlg);
 
@@ -160,14 +184,20 @@ namespace DynamicPad
 
             if (result == true)
             {
-                // Open document
-                string filename = dlg.FileName;
-                var streamReader = new StreamReader(filename);
-                textEditor.Text = streamReader.ReadToEnd();
-                streamReader.Close();
-                SetTitle(filename);
+                Open(dlg.FileName);
             }
         }
+
+        private void Open(string fileName)
+        {
+            var streamReader = new StreamReader(fileName);
+            textEditor.Text = streamReader.ReadToEnd();
+            streamReader.Close();
+            SetTitle(fileName);
+            _currentFileName = fileName;
+        }
+
+        private string _currentFileName;
 
         private static void AddFileDialogSettings(FileDialog dlg)
         {
