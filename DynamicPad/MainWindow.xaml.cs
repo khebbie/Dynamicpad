@@ -17,6 +17,7 @@ namespace DynamicPad
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string _currentFileName;
         private BackgroundWorker _backgroundWorker;
 
         public MainWindow()
@@ -31,7 +32,14 @@ namespace DynamicPad
             textEditor.Focus();
 
             SetupCodeCompletion();
+            textEditor.TextArea.TextEntered += new TextCompositionEventHandler(TextArea_TextEntered);
             InitializeBackgroundWorker();
+        }
+
+        private bool _textChangedSinceLastSave = false;
+        void TextArea_TextEntered(object sender, TextCompositionEventArgs e)
+        {
+            _textChangedSinceLastSave = true;
         }
 
         private void SetupCodeCompletion()
@@ -90,7 +98,7 @@ namespace DynamicPad
             }
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                OpenFileDialog();
+                OpenFileCheckIfFileSaved();
             }
         }
 
@@ -100,6 +108,7 @@ namespace DynamicPad
                 SaveDialog();
             else
                 Save(_currentFileName);
+            _textChangedSinceLastSave = false;
         }
 
         private void ClearOutput()
@@ -136,7 +145,6 @@ namespace DynamicPad
                 output.Text += s;
                 ProgressIndicator.Visibility = Visibility.Visible;
             }));
-            
         }
 
         private void ClearOutput__(object sender, RoutedEventArgs e)
@@ -176,6 +184,22 @@ namespace DynamicPad
 
         private void OpenToolbarButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileCheckIfFileSaved();
+        }
+
+        private void OpenFileCheckIfFileSaved()
+        {
+            if (_textChangedSinceLastSave)
+            {
+                var messageBoxResult = MessageBox.Show("Text not saved yet do you want to save", "Unsaved changes",
+                                                       MessageBoxButton.YesNoCancel);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                    SaveFileCheckIfAlreadyLoaded();
+                else if (messageBoxResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
             OpenFileDialog();
         }
 
@@ -201,8 +225,6 @@ namespace DynamicPad
             SetTitle(fileName);
             _currentFileName = fileName;
         }
-
-        private string _currentFileName;
 
         private static void AddFileDialogSettings(FileDialog dlg)
         {
@@ -234,6 +256,8 @@ namespace DynamicPad
         private void NewToolbarButton_Click(object sender, RoutedEventArgs e)
         {
             textEditor.Text = string.Empty;
+            _currentFileName = string.Empty;
+
             Title = "New Document";
         }
 
