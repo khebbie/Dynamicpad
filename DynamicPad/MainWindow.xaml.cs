@@ -86,15 +86,20 @@ namespace DynamicPad
             }
             else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                if(String.IsNullOrWhiteSpace(_currentFileName))
-                    SaveDialog();
-                else
-                    Save(_currentFileName);
+                SaveFileCheckIfAlreadyLoaded();
             }
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 OpenFileDialog();
             }
+        }
+
+        private void SaveFileCheckIfAlreadyLoaded()
+        {
+            if (String.IsNullOrWhiteSpace(_currentFileName))
+                SaveDialog();
+            else
+                Save(_currentFileName);
         }
 
         private void ClearOutput()
@@ -141,7 +146,7 @@ namespace DynamicPad
 
         private void SaveToolbarButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveDialog();
+            SaveFileCheckIfAlreadyLoaded();
         }
 
         private void SaveDialog()
