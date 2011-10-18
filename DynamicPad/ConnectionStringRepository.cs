@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using DynamicPadTests;
 
 namespace DynamicPad
 {
@@ -10,6 +12,10 @@ namespace DynamicPad
                 throw new ArgumentNullException("connectionStringName");
             if(string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentNullException("connectionString");
+
+            var cfgFile = new FileInfo(CfgFileUtility.GetPathToFile());
+            if (!cfgFile.Exists)
+                cfgFile.Create();
         }
     }
 }

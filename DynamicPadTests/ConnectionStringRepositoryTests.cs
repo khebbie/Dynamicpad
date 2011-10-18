@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DynamicPad;
 using NUnit.Framework;
 
@@ -27,6 +28,31 @@ namespace DynamicPadTests
         {
             const string myConnectionString = "MyConnectionString";
             Assert.Throws<ArgumentNullException>(() => _sut.Add(myConnectionString, null));
+        }
+
+        [Test]
+        public void Add_FileDoesNotExits_AddsFile()
+        {
+            EnsureCfgFileDoesNotExist();
+
+            const string myConnectionString = "MyConnectionString";
+            _sut.Add(myConnectionString, ConnectionString);
+
+            Assert.True(new FileInfo(CfgFileUtility.GetPathToFile()).Exists);
+        }
+
+        private static void EnsureCfgFileDoesNotExist()
+        {
+            var pathToDirectory = CfgFileUtility.GetCfgDirectory();
+
+            var cfgDirectory = new DirectoryInfo(pathToDirectory);
+            if (!cfgDirectory.Exists)
+                cfgDirectory.Create();
+
+            var pathToFile = CfgFileUtility.GetPathToFile();
+            var cfgFile = new FileInfo(pathToFile);
+            if (cfgFile.Exists)
+                cfgFile.Delete();
         }
     }
 }
