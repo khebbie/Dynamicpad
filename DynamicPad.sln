@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicPad", "DynamicPad\DynamicPad.csproj", "{75262E1E-8B59-4193-B6FF-40DC27D5EB98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicPadTests", "DynamicPadTests\DynamicPadTests.csproj", "{48D255A5-B4CA-4BCB-9262-0652D4E12F74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,16 @@ Global
 		{75262E1E-8B59-4193-B6FF-40DC27D5EB98}.Release|Mixed Platforms.Build.0 = Release|x86
 		{75262E1E-8B59-4193-B6FF-40DC27D5EB98}.Release|x86.ActiveCfg = Release|x86
 		{75262E1E-8B59-4193-B6FF-40DC27D5EB98}.Release|x86.Build.0 = Release|x86
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{48D255A5-B4CA-4BCB-9262-0652D4E12F74}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
