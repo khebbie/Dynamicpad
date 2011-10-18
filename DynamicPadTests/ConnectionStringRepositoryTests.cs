@@ -41,6 +41,16 @@ namespace DynamicPadTests
             Assert.True(new FileInfo(CfgFileUtility.GetPathToFile()).Exists);
         }
 
+        [Test]
+        public void AddGet_CanAddAndRetrieve()
+        {
+            const string myConnectionString = "MyConnectionString";
+            _sut.Add(myConnectionString, ConnectionString);
+
+            string connectionString = _sut.Get(myConnectionString);
+            StringAssert.Equals(connectionString, ConnectionString);
+        }
+
         private static void EnsureCfgFileDoesNotExist()
         {
             var pathToDirectory = CfgFileUtility.GetCfgDirectory();
