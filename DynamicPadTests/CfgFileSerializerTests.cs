@@ -32,6 +32,17 @@ namespace DynamicPadTests
         }
 
         [Test]
+        public void Serialize_LineTwoIsEmpty_DoesNotThrow()
+        {
+            const string name = "name";
+            const string connectionstring = "connectionstring";
+            var fileContent = string.Format("{0}, {1}", name, connectionstring);
+            fileContent += "\n";
+
+            Assert.DoesNotThrow(() => _sut.Serialize(fileContent));
+        }
+
+        [Test]
         public void Serialize_TwoStringsSeperatedByComma_DictionaryWithStrings()
         {
             const string name = "name";

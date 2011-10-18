@@ -14,6 +14,7 @@ namespace DynamicPadTests
         [SetUp]
         public void BeforeEach()
         {
+            EnsureCfgFileDoesNotExist();
             _sut = new ConnectionStringRepository();
         }
 
@@ -33,7 +34,7 @@ namespace DynamicPadTests
         [Test]
         public void Add_FileDoesNotExits_AddsFile()
         {
-            EnsureCfgFileDoesNotExist();
+            
 
             const string myConnectionString = "MyConnectionString";
             _sut.Add(myConnectionString, ConnectionString);
@@ -48,7 +49,16 @@ namespace DynamicPadTests
             _sut.Add(myConnectionString, ConnectionString);
 
             string connectionString = _sut.Get(myConnectionString);
-            StringAssert.Equals(connectionString, ConnectionString);
+            Assert.AreEqual(connectionString, ConnectionString);
+        }
+
+        [Test]
+        public void Add_ConnectionStringAlreadyExists_Throws()
+        {
+            const string myConnectionString = "MyConnectionString";
+            _sut.Add(myConnectionString, ConnectionString);
+
+            Assert.Throws<ArgumentException>(() => _sut.Add(myConnectionString, ConnectionString));
         }
 
         private static void EnsureCfgFileDoesNotExist()

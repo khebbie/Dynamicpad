@@ -1,13 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using DynamicPadTests;
 
 namespace DynamicPad
 {
     public class ConnectionStringRepository
     {
+        private readonly CfgFileSerializer _cfgFileSerializer;
+        Dictionary<string,string> _connectionStrings = new Dictionary<string, string>(); 
+
+        public ConnectionStringRepository()
+        {
+            _cfgFileSerializer = new CfgFileSerializer();
+            ReadFile();
+        }
+
+        private void ReadFile()
+        {
+            string filecontent = ReadFile(CfgFileUtility.GetPathToFile());
+           _connectionStrings = _cfgFileSerializer.Serialize(filecontent);
+        }
+
         public void Add(string connectionStringName, string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionStringName))
@@ -18,43 +32,38 @@ namespace DynamicPad
             var cfgFile = new FileInfo(CfgFileUtility.GetPathToFile());
             if (!cfgFile.Exists)
                 cfgFile.Create();
-
+            _connectionStrings.Add(connectionStringName, connectionString);
+            var textToWrite = _cfgFileSerializer.Deserialize(_connectionStrings);
+            WriteFile(textToWrite);
         }
 
-        public string Get(string myConnectionString)
+        private static void WriteFile(string textToWrite)
         {
-            throw new NotImplementedException();
-        }
-    }
+            TextWriter tw = new StreamWriter(CfgFileUtility.GetPathToFile());
 
-    public class CfgFileSerializer
-    {
-        public Dictionary<string, string> Serialize(string fileContent)
+            tw.Write(textToWrite);
+            tw.Close();
+        }
+
+        private string ReadFile(string fileName)
         {
-            var result = new Dictionary<string, string>();
-            if(string.IsNullOrWhiteSpace(fileContent))
-                return result;
-            var lines = fileContent.Split('\n');
-            foreach (var line in lines)
-            {
-                if (!line.Contains(","))
-                    throw new ArgumentException(@"Each line should contain a comma which seperates a connectionstring from its name","fileContent");
-                var strings = line.Split(',');
-                result.Add(strings[0].Trim(), strings[1].Trim());
-            }
+            EnsureCfgFileExist(fileName);
+            var streamReader = new StreamReader(fileName);
+            var result = streamReader.ReadToEnd();
+            streamReader.Close();
             return result;
         }
 
-        public string Deserialize(Dictionary<string, string> cfg)
+        private void EnsureCfgFileExist(string filename)
         {
-            var result =  new StringBuilder();
-            foreach (var cfgLine in cfg)
-            {
-                var line = string.Format("{0}, {1}", cfgLine.Key, cfgLine.Value);
-                result.Append(line);
-                result.Append("\n");
-            }
-            return result.ToString();
+            var cfgFile = new FileInfo(filename);
+            if (!cfgFile.Exists)
+                cfgFile.Create();
+        }
+
+        public string Get(string connectionStringName)
+        {
+            return _connectionStrings[connectionStringName];
         }
     }
 }
