@@ -24,7 +24,7 @@ namespace DynamicPad
         {
             InitializeComponent();
             ProgressIndicator.Visibility = Visibility.Hidden;
-            grid.KeyUp += WindowKeyUp;
+            KeyUp += WindowKeyUp;
             textEditor.ShowLineNumbers = true;
             PopulateConnectionStringsCombo();
             LanguageSelector.Items.Add("IronRuby");

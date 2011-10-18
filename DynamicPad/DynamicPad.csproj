@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConnectionStringRepository.cs" />
     <Compile Include="MyCompletionData.xaml.cs" />
     <Compile Include="RubyScriptRunner.xaml.cs" />
     <Compile Include="ScriptArguments.xaml.cs" />
