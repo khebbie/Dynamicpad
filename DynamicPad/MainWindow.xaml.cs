@@ -122,6 +122,10 @@ namespace DynamicPad
             {
                 OpenFileCheckIfFileSaved();
             }
+            else if(e.Key == Key.Escape)
+            {
+                textEditor.Focus();
+            }
         }
 
         private void SaveFileCheckIfAlreadyLoaded()
