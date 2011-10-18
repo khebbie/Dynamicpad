@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CfgFileParserTests.cs" />
+    <Compile Include="CfgFileSerializerTests.cs" />
     <Compile Include="ConnectionStringRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
