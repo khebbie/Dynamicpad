@@ -19,22 +19,30 @@ namespace DynamicPad
     {
         private string _currentFileName;
         private BackgroundWorker _backgroundWorker;
+        Stopwatch stopwatch = new Stopwatch();
 
         public MainWindow()
         {
             InitializeComponent();
-            ProgressIndicator.Visibility = Visibility.Hidden;
             grid.KeyUp += WindowKeyUp;
             textEditor.ShowLineNumbers = true;
             PopulateConnectionStringsCombo();
             LanguageSelector.Items.Add("IronRuby");
             LanguageSelector.SelectedIndex = 0;
             textEditor.Focus();
-
+            
             SetupCodeCompletion();
             textEditor.TextArea.TextEntered += new TextCompositionEventHandler(TextArea_TextEntered);
             InitializeBackgroundWorker();
             this.Closing += new CancelEventHandler(MainWindow_Closing);
+            this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+        }
+
+        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            textEditor.Height = Height / 2;
+            output.Height = (Height / 2 )- 120;
+            HideProgressIndicator();
         }
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -84,7 +92,7 @@ namespace DynamicPad
             {
                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                 {
-                    ProgressIndicator.Visibility = Visibility.Hidden;
+                    HideProgressIndicator();
                     stopwatch.Stop();
                     var elapsed = stopwatch.ElapsedMilliseconds;
                     statusText.Text = "Finished in: " + elapsed + " miliseconds";
@@ -146,13 +154,13 @@ namespace DynamicPad
                 output.Text = String.Empty;
             }));
         }
-        Stopwatch stopwatch = new Stopwatch();
+        
         private void RunScript()
         {
             stopwatch.Reset();
             stopwatch.Start();
             ClearOutput();
-            ProgressIndicator.Visibility = Visibility.Visible;
+            ShowProgressIndicator();
             var connectionStringName = ConnectionStringSelector.SelectedItem.ToString();
             var connectionString = Settings.Default.Properties[connectionStringName].DefaultValue.ToString();
             var scriptArguments = new ScriptArguments
@@ -173,7 +181,7 @@ namespace DynamicPad
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 output.Text += s;
-                ProgressIndicator.Visibility = Visibility.Visible;
+                ShowProgressIndicator();
             }));
         }
 
@@ -302,8 +310,23 @@ namespace DynamicPad
         private void StopToolbarButton_Click(object sender, RoutedEventArgs e)
         {
             _backgroundWorker.CancelAsync();
-            ProgressIndicator.Visibility = Visibility.Hidden;
+            HideProgressIndicator();
             statusText.Text = "Stopped script run";
+        }
+
+        private void ShowProgressIndicator()
+        {
+            ProgressIndicator.Visibility = Visibility.Visible;
+            ProgressIndicator.Height = 130;
+            ProgressIndicator.Width = 130;
+        }
+
+        private void HideProgressIndicator()
+        {
+
+            ProgressIndicator.Visibility = Visibility.Hidden;
+            ProgressIndicator.Height = 0;
+            ProgressIndicator.Width = 0;
         }
     }
 }

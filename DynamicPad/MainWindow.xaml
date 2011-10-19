@@ -1,7 +1,8 @@
 ﻿<Window x:Class="DynamicPad.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="350" Width="525" Title="MainWindow">
-    <DockPanel LastChildFill="True" Name="grid">
-        <ToolBarTray DockPanel.Dock="Top" Background="White" HorizontalAlignment="Stretch">
-            <ToolBar Height="26" Margin="12,12,0,0" HorizontalAlignment="Left" Name="toolBar1" VerticalAlignment="Top">
+    
+    <DockPanel LastChildFill="false" Name="grid">
+        <ToolBarTray DockPanel.Dock="Top" Background="Gray" HorizontalAlignment="Stretch" Height="30">
+            <ToolBar Height="28" Margin="1,1,1,1" HorizontalAlignment="Left" Name="toolBar1" VerticalAlignment="Top">
                 <Button Click="ClearOutput__" Name="ClearToolbarButton" ToolTip="Clear output pane">
                     <Image Source="toolbargraphics\clear.png" />
                 </Button>
@@ -31,7 +32,7 @@
         <ScrollViewer DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="output" />
         </ScrollViewer>
-        <Canvas Name="ProgressIndicator" Visibility="Hidden">
+        <Canvas Name="ProgressIndicator" Visibility="Hidden"  Panel.ZIndex="1">
             <Canvas Name="spinningProgress" Margin="0,0,0,0" Height="130" Width="130"  VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Canvas Name="innerCanvas" Height="110" Width="110"  VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.Left="10" Canvas.Top="10">
                     <Ellipse Margin="45,-5,0,0" Name="ellipseLarge" Stroke="Blue" Height="20" Width="20" VerticalAlignment="Top" Fill="Blue" HorizontalAlignment="Left" />
@@ -71,9 +72,8 @@
                 <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
             </Canvas.RenderTransform>
         </Canvas>
-        <StatusBar DockPanel.Dock="Bottom"  Margin="0,288,0,0" Name="statusBar" Height="31" VerticalAlignment="Bottom">
+        <StatusBar DockPanel.Dock="Bottom" Margin="0,0,0,0" Name="statusBar" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
             <TextBlock Name="statusText">Ready.</TextBlock>
         </StatusBar>
     </DockPanel>
-    
 </Window>
