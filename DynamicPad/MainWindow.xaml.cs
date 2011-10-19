@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using DynamicPad.Properties;
 using Microsoft.Win32;
 using System.Diagnostics;
+
 namespace DynamicPad
 {
     //Getting the icons from http://www.iconfinder.com
@@ -95,7 +96,8 @@ namespace DynamicPad
                     HideProgressIndicator();
                     stopwatch.Stop();
                     var elapsed = stopwatch.ElapsedMilliseconds;
-                    statusText.Text = "Finished in: " + elapsed + " miliseconds";
+                    statusText.Text = "Finished";
+                    timerStatus.Text = elapsed + " ms";
                 }));
             };
         }

@@ -73,7 +73,9 @@
             </Canvas.RenderTransform>
         </Canvas>
         <StatusBar DockPanel.Dock="Bottom" Margin="0,0,0,0" Name="statusBar" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-            <TextBlock Name="statusText">Ready.</TextBlock>
+            <TextBlock Name="statusText" HorizontalAlignment="Left">Ready.</TextBlock>
+            <Separator Background="Gray"  Width="2" Height="25" />
+            <TextBlock Name="timerStatus" HorizontalAlignment="Right"></TextBlock>
         </StatusBar>
     </DockPanel>
 </Window>
