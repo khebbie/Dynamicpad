@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using Massive;
 using Microsoft.CSharp.RuntimeBinder;
 
@@ -26,6 +24,12 @@ namespace DynamicPad
             _appender("\n");
         }
 
+        public void Print(Object message)
+        {
+            _appender(message.ToString());
+            _appender("\n");
+        }
+
         public void Clear()
         {
             _clearText();
@@ -35,7 +39,7 @@ namespace DynamicPad
         {
             foreach (var val in obj)
             {
-                Print(val.Key + ": " +  val.Value);
+                Print(val.Key + ": " + val.Value);
             }
         }
 
