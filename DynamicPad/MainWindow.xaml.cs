@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DynamicPad.Properties;
 using Microsoft.Win32;
-
+using System.Diagnostics;
 namespace DynamicPad
 {
     //Getting the icons from http://www.iconfinder.com
@@ -85,7 +85,9 @@ namespace DynamicPad
                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                 {
                     ProgressIndicator.Visibility = Visibility.Hidden;
-                    statusText.Text = "Finished";
+                    stopwatch.Stop();
+                    var elapsed = stopwatch.ElapsedMilliseconds;
+                    statusText.Text = "Finished in: " + elapsed + " miliseconds";
                 }));
             };
         }
@@ -144,9 +146,11 @@ namespace DynamicPad
                 output.Text = String.Empty;
             }));
         }
-
+        Stopwatch stopwatch = new Stopwatch();
         private void RunScript()
         {
+            stopwatch.Reset();
+            stopwatch.Start();
             ClearOutput();
             ProgressIndicator.Visibility = Visibility.Visible;
             var connectionStringName = ConnectionStringSelector.SelectedItem.ToString();

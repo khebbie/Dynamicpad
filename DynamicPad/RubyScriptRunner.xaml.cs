@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using IronRuby;
 using Massive;
 using Microsoft.Scripting.Hosting;

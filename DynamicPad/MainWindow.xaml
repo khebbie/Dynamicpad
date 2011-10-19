@@ -8,8 +8,6 @@
                 <Button Click="SaveToolbarButton_Click" Name="SaveToolbarButton" ToolTip="Save file">
                     <Image Source="toolbargraphics\save.png" />
                 </Button>
-
-               
                 <Button Click="OpenToolbarButton_Click" Name="OpenToolbarButton" ToolTip="Open file">
                     <Image Source="toolbargraphics\open.png" />
                 </Button>
@@ -23,7 +21,6 @@
                     <Image Source="toolbargraphics\stop.png" />
                 </Button>
                 <ComboBox Name="LanguageSelector" ToolTip="Select language">
-                    
                 </ComboBox>
                 <ComboBox Name="ConnectionStringSelector" ToolTip="Select ConnectionString">
                 </ComboBox>
@@ -34,7 +31,7 @@
         <ScrollViewer DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <TextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="output" />
         </ScrollViewer>
-        <Canvas Name="ProgressIndicator">
+        <Canvas Name="ProgressIndicator" Visibility="Hidden">
             <Canvas Name="spinningProgress" Margin="0,0,0,0" Height="130" Width="130"  VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Canvas Name="innerCanvas" Height="110" Width="110"  VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.Left="10" Canvas.Top="10">
                     <Ellipse Margin="45,-5,0,0" Name="ellipseLarge" Stroke="Blue" Height="20" Width="20" VerticalAlignment="Top" Fill="Blue" HorizontalAlignment="Left" />
@@ -74,7 +71,7 @@
                 <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
             </Canvas.RenderTransform>
         </Canvas>
-        <StatusBar Margin="0,288,0,0" Name="statusBar" Height="23" VerticalAlignment="Bottom">
+        <StatusBar DockPanel.Dock="Bottom"  Margin="0,288,0,0" Name="statusBar" Height="31" VerticalAlignment="Bottom">
             <TextBlock Name="statusText">Ready.</TextBlock>
         </StatusBar>
     </DockPanel>
