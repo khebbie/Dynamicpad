@@ -47,7 +47,10 @@ namespace DynamicPad
         {
             foreach (var value in values)
             {
-                Dump(value);
+                if (value.GetType() == typeof(DynamicModel))
+                    Dump(value);
+                else
+                    Print(value);
             }
         }
         public void DumpModel(DynamicModel model)
