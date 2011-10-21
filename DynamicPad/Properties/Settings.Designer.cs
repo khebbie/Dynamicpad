@@ -34,5 +34,17 @@ namespace DynamicPad.Properties {
                 this["ConnectionStringPerson"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLExpress;Integrated Security=true; ;initial catalog=SQLCookbook;")]
+        public string ConnectionStringCookbook {
+            get {
+                return ((string)(this["ConnectionStringCookbook"]));
+            }
+            set {
+                this["ConnectionStringCookbook"] = value;
+            }
+        }
     }
 }

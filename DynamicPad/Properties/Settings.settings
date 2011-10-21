@@ -5,5 +5,8 @@
     <Setting Name="ConnectionStringPerson" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=MassiveTest;</Value>
     </Setting>
+    <Setting Name="ConnectionStringCookbook" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\SQLExpress;Integrated Security=true; ;initial catalog=SQLCookbook;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

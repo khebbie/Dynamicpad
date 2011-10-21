@@ -47,7 +47,7 @@ namespace DynamicPad
         {
             foreach (var value in values)
             {
-                if (value.GetType() == typeof(DynamicModel))
+                if (value.GetType() == typeof(DynamicModel) || value.GetType() == typeof(ExpandoObject))
                     Dump(value);
                 else
                     Print(value);
