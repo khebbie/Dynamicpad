@@ -35,6 +35,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="ICSharpCode.AvalonEdit, Version=4.1.0.8000, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
@@ -130,6 +134,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="ruby.xshd" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="toolbargraphics\clear.png">
@@ -150,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="toolbargraphics\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="app.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

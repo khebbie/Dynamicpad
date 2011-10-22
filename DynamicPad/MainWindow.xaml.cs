@@ -7,8 +7,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using DynamicPad.Properties;
+using ICSharpCode.AvalonEdit.Highlighting;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Xml;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 namespace DynamicPad
 {
@@ -37,6 +40,7 @@ namespace DynamicPad
             InitializeBackgroundWorker();
             this.Closing += new CancelEventHandler(MainWindow_Closing);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+            textEditor.SyntaxHighlighting = ResourceLoader.LoadHighlightingDefinition("ruby.xshd");
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -329,6 +333,21 @@ namespace DynamicPad
             ProgressIndicator.Visibility = Visibility.Hidden;
             ProgressIndicator.Height = 0;
             ProgressIndicator.Width = 0;
+        }
+
+        
+    }
+
+    //http://stackoverflow.com/questions/5057210/how-do-i-create-an-avalonedit-syntax-file-xshd-and-embed-it-into-my-assembly
+    public static class ResourceLoader
+    {
+        public static IHighlightingDefinition LoadHighlightingDefinition(string resourceName)
+        {
+            var type = typeof(ResourceLoader);
+            var fullName = type.Namespace + "." + resourceName;
+            using (var stream = type.Assembly.GetManifestResourceStream(fullName))
+            using (var reader = new XmlTextReader(stream))
+                return HighlightingLoader.Load(reader, HighlightingManager.Instance);
         }
     }
 }
