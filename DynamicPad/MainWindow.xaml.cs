@@ -40,6 +40,7 @@ namespace DynamicPad
             InitializeBackgroundWorker();
             this.Closing += new CancelEventHandler(MainWindow_Closing);
             this.SizeChanged += new SizeChangedEventHandler(MainWindow_SizeChanged);
+            //Thanks to http://code.google.com/p/yuzhenpin-nemo/source/browse/trunk/lib/nemo/xshd/ruby.xml
             textEditor.SyntaxHighlighting = ResourceLoader.LoadHighlightingDefinition("ruby.xshd");
         }
 
