@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.IsolatedStorage;
 using DynamicPadTests;
 
 namespace DynamicPad
@@ -18,8 +19,8 @@ namespace DynamicPad
 
         private void ReadFile()
         {
-            string filecontent = ReadFile(CfgFileUtility.GetPathToFile());
-           _connectionStrings = _cfgFileSerializer.Serialize(filecontent);
+            string filecontent = InternalReadFile();
+            _connectionStrings = _cfgFileSerializer.Serialize(filecontent);
         }
 
         public void Add(string connectionStringName, string connectionString)
@@ -29,9 +30,9 @@ namespace DynamicPad
             if(string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentNullException("connectionString");
 
-            var cfgFile = new FileInfo(CfgFileUtility.GetPathToFile());
-            if (!cfgFile.Exists)
-                cfgFile.Create();
+            //var cfgFile = new FileInfo(CfgFileUtility.GetPathToFile());
+            //if (!cfgFile.Exists)
+            //    cfgFile.Create();
             _connectionStrings.Add(connectionStringName, connectionString);
             var textToWrite = _cfgFileSerializer.Deserialize(_connectionStrings);
             WriteFile(textToWrite);
@@ -39,19 +40,33 @@ namespace DynamicPad
 
         private static void WriteFile(string textToWrite)
         {
-            TextWriter tw = new StreamWriter(CfgFileUtility.GetPathToFile());
+            IsolatedStorageFile isoStore = GetIsolatedStorageFile();
 
-            tw.Write(textToWrite);
-            tw.Close();
+            IsolatedStorageFileStream isoStream2 =
+            new IsolatedStorageFileStream(CfgFileUtility.GetPathToFile(),
+            FileMode.Create, isoStore);
+
+            StreamWriter sw = new StreamWriter(isoStream2);
+            sw.Write(textToWrite);
+            sw.Close();
+            isoStream2.Close();
+        }
+  
+        private static IsolatedStorageFile GetIsolatedStorageFile()
+        {
+            IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Domain | IsolatedStorageScope.Assembly, null, null);
+            return isoStore;
         }
 
-        private string ReadFile(string fileName)
+        private string InternalReadFile()
         {
-            EnsureCfgFileExist(fileName);
-            var streamReader = new StreamReader(fileName);
-            var result = streamReader.ReadToEnd();
-            streamReader.Close();
-            return result;
+            IsolatedStorageFile isoStore = GetIsolatedStorageFile();
+            var file = new IsolatedStorageFileStream("MyApp.preferences", FileMode.Open, isoStore);
+            StreamReader reader = new StreamReader(CfgFileUtility.GetPathToFile());
+            String prefs = reader.ReadToEnd();
+            Console.WriteLine(prefs);
+            file.Close();
+            return prefs;
         }
 
         private void EnsureCfgFileExist(string filename)

@@ -7,7 +7,7 @@ namespace DynamicPadTests
     {
         public static string GetPathToFile()
         {
-            return Path.Combine(GetCfgDirectory(), "ConnectionStrings.cfg");
+            return "DynamicPad\\ConnectionStrings.cfg";
         }
 
         public static string GetCfgDirectory()
