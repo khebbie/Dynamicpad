@@ -85,12 +85,19 @@
     </ApplicationDefinition>
     <Compile Include="CfgFileSerializer.cs" />
     <Compile Include="CfgFileUtility.cs" />
+    <Compile Include="ConnectionStringDialog.xaml.cs">
+      <DependentUpon>ConnectionStringDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionStringRepository.cs" />
     <Compile Include="IsolatedStorageSettings.cs" />
     <Compile Include="MyCompletionData.xaml.cs" />
     <Compile Include="RubyScriptRunner.xaml.cs" />
     <Compile Include="ScriptArguments.xaml.cs" />
     <Compile Include="TextAreaCompletion.xaml.cs" />
+    <Page Include="ConnectionStringDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

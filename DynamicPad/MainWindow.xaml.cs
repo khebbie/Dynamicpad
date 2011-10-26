@@ -26,6 +26,7 @@ namespace DynamicPad
             ProgressIndicator.Visibility = Visibility.Hidden;
             KeyUp += WindowKeyUp;
             textEditor.ShowLineNumbers = true;
+            _connectionStringRepository = new ConnectionStringRepository();
             PopulateConnectionStringsCombo();
             LanguageSelector.Items.Add("IronRuby");
             LanguageSelector.SelectedIndex = 0;
@@ -35,6 +36,20 @@ namespace DynamicPad
             textEditor.TextArea.TextEntered += new TextCompositionEventHandler(TextArea_TextEntered);
             InitializeBackgroundWorker();
             this.Closing += new CancelEventHandler(MainWindow_Closing);
+
+            AddConnectionStringFromDialog();
+        }
+
+        private void AddConnectionStringFromDialog()
+        {
+            var box = new ConnectionStringDialog();
+            //bool? dialogResult = box.ShowDialog();
+            box.ShowDialog();
+            //if (dialogResult.HasValue && dialogResult.Value)
+            {
+                var connectionString = box.GetConnectionString();
+                _connectionStringRepository.Add(connectionString.Item1, connectionString.Item2);
+            }
         }
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -94,8 +109,6 @@ namespace DynamicPad
 
         private void PopulateConnectionStringsCombo()
         {
-            _connectionStringRepository = new ConnectionStringRepository();
-
             foreach (var connectionString in _connectionStringRepository.All())
             {
                 ConnectionStringSelector.Items.Add(connectionString.Key);
