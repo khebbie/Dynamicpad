@@ -10,11 +10,11 @@ namespace DynamicPad
         private readonly CfgFileSerializer _cfgFileSerializer;
         Dictionary<string,string> _connectionStrings = new Dictionary<string, string>();
         private readonly IsolatedStorageSettings _isolatedStorageSettings;
-        private string _isolatedFileName;
+        private readonly string _isolatedFileName;
 
         public ConnectionStringRepository()
         {
-            _isolatedFileName = "application.config";
+            _isolatedFileName = "dynamicPad.config";
             _isolatedStorageSettings = new IsolatedStorageSettings(_isolatedFileName);
             _cfgFileSerializer = new CfgFileSerializer();
             ReadFile();
@@ -46,6 +46,11 @@ namespace DynamicPad
         public string Get(string connectionStringName)
         {
             return _connectionStrings[connectionStringName];
+        }
+
+        public Dictionary<string, string> All()
+        {
+            return _connectionStrings;
         }
     }
 }

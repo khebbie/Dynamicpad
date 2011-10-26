@@ -54,8 +54,8 @@ namespace DynamicPad
 
         private static IsolatedStorageFile GetIsoStoreFile()
         {
-            return IsolatedStorageFile.GetStore(IsolatedStorageScope.User
-                                                | IsolatedStorageScope.Assembly, null, null);
+            return IsolatedStorageFile.GetUserStoreForDomain();
+            //return IsolatedStorageFile.GetStore(IsolatedStorageScope.Roaming , null, null);
         }
 
         private  bool DoesFileExistInIsolatedStorage()

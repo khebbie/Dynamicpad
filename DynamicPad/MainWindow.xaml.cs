@@ -58,6 +58,8 @@ namespace DynamicPad
         }
 
         private bool _textChangedSinceLastSave = false;
+        private ConnectionStringRepository _connectionStringRepository;
+
         void TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
             _textChangedSinceLastSave = true;
@@ -92,17 +94,13 @@ namespace DynamicPad
 
         private void PopulateConnectionStringsCombo()
         {
-            PropertyInfo[] props = Settings.Default.GetType().GetProperties();
-            foreach (PropertyInfo prop in props)
+            _connectionStringRepository = new ConnectionStringRepository();
+
+            foreach (var connectionString in _connectionStringRepository.All())
             {
-                if (!prop.Name.Contains("ConnectionString"))
-                    continue;
-                SettingsProperty sett = Settings.Default.Properties[prop.Name];
-                if (sett != null)
-                {
-                    ConnectionStringSelector.Items.Add(sett.Name);
-                }
+                ConnectionStringSelector.Items.Add(connectionString.Key);
             }
+
             ConnectionStringSelector.SelectedIndex = 0;
         }
 
@@ -150,7 +148,7 @@ namespace DynamicPad
             ClearOutput();
             ProgressIndicator.Visibility = Visibility.Visible;
             var connectionStringName = ConnectionStringSelector.SelectedItem.ToString();
-            var connectionString = Settings.Default.Properties[connectionStringName].DefaultValue.ToString();
+            var connectionString = _connectionStringRepository.Get(connectionStringName);
             var scriptArguments = new ScriptArguments
                                       {
                                           ConnectionString = connectionString,
