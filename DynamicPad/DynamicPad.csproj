@@ -86,6 +86,7 @@
     <Compile Include="CfgFileSerializer.cs" />
     <Compile Include="CfgFileUtility.cs" />
     <Compile Include="ConnectionStringRepository.cs" />
+    <Compile Include="IsolatedStorageSettings.cs" />
     <Compile Include="MyCompletionData.xaml.cs" />
     <Compile Include="RubyScriptRunner.xaml.cs" />
     <Compile Include="ScriptArguments.xaml.cs" />
