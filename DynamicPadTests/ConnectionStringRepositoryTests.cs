@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using DynamicPad;
 using NUnit.Framework;
 
@@ -14,7 +13,6 @@ namespace DynamicPadTests
         [SetUp]
         public void BeforeEach()
         {
-            EnsureCfgFileDoesNotExist();
             _sut = new ConnectionStringRepository();
             _sut.Clear();
         }
@@ -40,6 +38,14 @@ namespace DynamicPadTests
 
             string connectionString = _sut.Get(myConnectionString);
             Assert.AreEqual(connectionString, ConnectionString);
+        }
+
+        [Test]
+        public void AddAlreadyExistingConnectionString_ThrowsArgumentException()
+        {
+            const string myConnectionString = "MyConnectionString";
+            _sut.Add(myConnectionString, ConnectionString);
+            Assert.Throws<ArgumentException>(() =>_sut.Add(myConnectionString, ConnectionString));
         }
 
         [Test]
@@ -78,20 +84,6 @@ namespace DynamicPadTests
 
             Assert.AreEqual(ConnectionString, s);
             Assert.AreEqual(ConnectionString+2, s2);
-        }
-
-        private static void EnsureCfgFileDoesNotExist()
-        {
-            var pathToDirectory = CfgFileUtility.GetCfgDirectory();
-
-            var cfgDirectory = new DirectoryInfo(pathToDirectory);
-            if (!cfgDirectory.Exists)
-                cfgDirectory.Create();
-
-            var pathToFile = CfgFileUtility.GetPathToFile();
-            var cfgFile = new FileInfo(pathToFile);
-            if (cfgFile.Exists)
-                cfgFile.Delete();
         }
     }
 }
