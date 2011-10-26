@@ -64,6 +64,22 @@ namespace DynamicPadTests
             Assert.AreEqual(ConnectionString, s);
         }
 
+        [Test]
+        public void Add_ThenNew2Strings_ReadsFileCorrectly()
+        {
+            const string myConnectionString = "MyConnectionString";
+            _sut.Add(myConnectionString, ConnectionString);
+            _sut.Add(myConnectionString+2, ConnectionString);
+
+            _sut = new ConnectionStringRepository();
+
+            var s = _sut.Get(myConnectionString);
+            var s2 = _sut.Get(myConnectionString);
+
+            Assert.AreEqual(ConnectionString, s);
+            Assert.AreEqual(ConnectionString+2, s2);
+        }
+
         private static void EnsureCfgFileDoesNotExist()
         {
             var pathToDirectory = CfgFileUtility.GetCfgDirectory();
